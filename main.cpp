@@ -1,8 +1,11 @@
 #include<iostream>
+#include<fstream>
+#include<cstring>
 
-enum letters{A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z};
 
 using namespace std;
+
+/*enum letters{A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z};*/
 
 class rotor{
   public:
@@ -13,35 +16,47 @@ class rotor{
       int map[26][2];
 
       // member function declarations
-      int mapping(int starting_pos, int map[26], int letter_dig); //does letter_dig also have to be a data memeber?
+      int mapping(int starting_pos, int map[26][2], int letter_dig); //does letter_dig also have to be a data memeber?
       // i.e. can you only use data members of a class in the member function?
 };
 
-int main(){
+int main(int n_arg, char* v_arg[]){
   cout << endl << endl;
+
+  rotor rotor;
 
   rotor.starting_pos = 5;
   int digit = 9;
-  int map[26];
 
-  cout << endl << endl;
+  for(int i=0; i<=25; i++){
+    rotor.map[i][0] = (i);
+  }
 
-  rotor.mapping(starting_pos, map, digit);
+  for(int j=0; j<25; j++){
+    rotor.map[j][1] = (j+1);
+  }
+
+  rotor.map[25][1] = 0;
+
+  cout << endl;
+
+  for(int i=0; i<26; i++){
+    cout << rotor.map[i][1];
+  }
+
+  rotor.mapping(rotor.starting_pos, rotor.map, digit);
 
   return 0;
 }
 
 
 
-
-
-
-int mapping(int starting_pos, int map[26], int inputted_digit){
+int rotor::mapping(int starting_pos, int map[26][2], int inputted_digit){
   // the inputted digit is in absolute form (i.e. not taking into account rotation)
   int rotation_transformation_1;
   int rotation_transformation_2;
   int mapped_digit;
-  cout << "Starting position (digit at 12 o'clock): " << starting_pos<<endl;
+  cout << endl << "Starting position (digit at 12 o'clock): " << starting_pos<<endl;
 
   cout << "Inputted (absolute) digit is: " << inputted_digit<<endl;
   // factoring in rotation to the inputted_digit
@@ -54,7 +69,7 @@ int mapping(int starting_pos, int map[26], int inputted_digit){
   cout << "Relative version is: " << rotation_transformation_1<<endl;
 
   // mapping the relative digit
-  mapped_digit = map[rotation_transformation_1];
+  mapped_digit = map[rotation_transformation_1][1];
   cout << "Which has been mapped to: " << mapped_digit << endl;
 
   // removing affects of rotation
