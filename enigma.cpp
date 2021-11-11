@@ -61,6 +61,38 @@ for (row; row < 13; row++){
 }
 }
 
+void load_map(int map[26][2], char** argv){
+
+  // index the first column
+  for (int i = 0; i < 26; i++){
+    map[i][0] = i;
+  }
+
+  ifstream in_stream;
+  int digit;
+
+  in_stream.open(argv[2]);
+
+  if (in_stream.fail()){
+    cout << "File could not be opened :(";
+  }
+
+  int row = 0;
+
+  in_stream >> digit;
+
+  while(!in_stream.eof())
+  {
+
+    map[row][1] = digit;
+    row++;
+
+    in_stream >> digit;
+  }
+
+  in_stream.close();
+}
+
 // Member function definitions:
 
 int plugboard::check_connections(int inputted_letter, int connections[13][2]){
@@ -77,6 +109,7 @@ int plugboard::check_connections(int inputted_letter, int connections[13][2]){
       return connections[i][0];
     }
   }
+  cout << "There is not a connection";
 }
 
 int rotor::mapping(int starting_pos, int map[26][2], int inputted_digit){
