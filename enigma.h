@@ -27,4 +27,8 @@ class plugboard{
     int check_connections(int inputted_letter, int connections[13][2]);
 };
 
+// functions:
+
+void load_plugboard(int plugboard[13][2], char** argv);
+
 #endif

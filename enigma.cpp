@@ -1,5 +1,6 @@
 #include"enigma.h"
 #include<iostream>
+#include<fstream>
 
 using namespace std;
 
@@ -13,7 +14,54 @@ void check_notches(int starting_pos, int notches[26]){
   }
 }
 
-// Function definitions:
+// function definitions
+
+void load_plugboard(int plugboard[13][2], char** argv){
+
+ifstream in_stream;
+int character;
+
+in_stream.open(argv[1]);
+
+if (in_stream.fail()){
+  cout << "File could not be opened :(";
+}
+
+int row = 0;
+int column = 0;
+
+in_stream >> character;
+
+while(!in_stream.eof())
+{
+
+  cout << character << " is in [row][column]: " << row << " " << column << endl;
+  plugboard[row][column] = character;
+
+  int col = column;
+
+  // updating position
+  if (col == 0){
+    column ++; // then column = 1 which means it applies to next boolean expression
+  }
+
+  if (col == 1){
+    row ++;
+    column --;
+  }
+  in_stream >> character;
+}
+
+in_stream.close();
+
+// Now row points to the first column & next row of the last connection
+for (row; row < 13; row++){
+  plugboard[row][0] = -1; // filling remaining spaces with minus 1; so wont be confused & used by plugboard
+  plugboard[row][1] = -1;
+}
+}
+
+// Member function definitions:
 
 int plugboard::check_connections(int inputted_letter, int connections[13][2]){
   cout << endl << "The inputted letter is: " << inputted_letter << endl;
