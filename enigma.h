@@ -1,0 +1,30 @@
+#ifndef ENIGMA_H
+#define ENIGMA_H
+
+
+// classes:
+
+class rotor{
+  public:
+
+      // data members
+      int starting_pos; //that just needs to be a integer, as tells you which letter at 12 o'clock
+      int notches[26]; //make dynamic
+      int map[26][2];
+
+      // member function declarations
+      int mapping(int starting_pos, int map[26][2], int letter_dig); //does letter_dig also have to be a data memeber?
+      // i.e. can you only use data members of a class in the member function?
+};
+
+class plugboard{
+  public:
+
+    // data members
+    int connections[13][2]; // max number of connections is 13
+
+    // member function definitions
+    int check_connections(int inputted_letter, int connections[13][2]);
+};
+
+#endif
