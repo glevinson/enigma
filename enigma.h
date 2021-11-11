@@ -33,4 +33,6 @@ void load_map(int map[26][2], char** argv);
 
 void load_plugboard(int plugboard[13][2], char** argv);
 
+void load_notches(int notches[26], char* argv_component);
+
 #endif

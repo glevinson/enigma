@@ -93,6 +93,40 @@ void load_map(int map[26][2], char** argv){
   in_stream.close();
 }
 
+void load_notches(int notches[26], char* argv_component){
+  ifstream in_stream;
+  int ignore; //storing rotors map in the variable ignore so dont accidentally get a mapping digit in our notches array
+  int notch;
+
+  in_stream.open(argv_component);
+
+  if (in_stream.fail()){
+    cout << "File could not be opened :(";
+  }
+
+  for(int count = 0; count < 26; count++){ // cycling through the first 26 components so we are just accessing the notches
+      in_stream >> ignore;
+    }
+
+  int row = 0;
+  in_stream >> notch;
+
+    while(!in_stream.eof())
+    {
+
+      notches[row] = notch;
+      row++;
+
+      in_stream >> notch;
+    }
+
+    in_stream.close();
+
+  for(row; row < 26; row++){
+    notches[row] = -1;
+  }
+  }
+
 // Member function definitions:
 
 int plugboard::check_connections(int inputted_letter, int connections[13][2]){

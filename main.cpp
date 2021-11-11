@@ -3,27 +3,22 @@
 #include<cstring>
 #include"enigma.h"
 
-
 using namespace std;
-
-// focussing on reading in teh data
 
 // main Function
 
 int main(int argc, char** argv){
 
-cout << endl << endl << "Command line arguments: " << endl;
+int notches[26];
 
-for (int i=0; i < argc; i++){
-  cout << "Argument " << i << ": " << argv[i] << endl;
+load_notches(notches, argv[5]);
+
+for (int i=0; i<26; i++){
+  cout << notches[i] << " ";
 }
 
-cout << endl;
-cout << argv << endl; // memory address of argv*
-cout << *argv << endl; // memory address of argv**
-cout << **argv << endl; // character stored
-cout << endl << endl;
-
-
-  return 0;
+return 0;
 }
+
+//can work out number of rotors from argc
+//do a for loop to go throuhg each of the rotors
