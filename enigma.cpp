@@ -5,14 +5,14 @@
 using namespace std;
 
 // Function currently working on:
-
+/*
 void check_notches(int starting_pos, int notches[26]){
   for (int j=0; j<= 25; j++){
     if (notches[j] == starting_pos){
       // tell next rotor to rotate...
     }
   }
-}
+}*/
 
 // function definitions
 
@@ -169,7 +169,7 @@ void load_positions(int starting_positions[], char** argv, int argc){
   }
 
   // Example arguments tests:
-
+  /*
   // Rotor 1 map & notches
 
   cout << endl << "Rotor 1 map: " << endl << endl;
@@ -227,7 +227,39 @@ void load_positions(int starting_positions[], char** argv, int argc){
 
   cout << endl << "Rotor 3 starting position: ";
   cout << rotor_array[2].starting_pos << endl << endl;
+  */
+  }
 
+  void check_notches(rotor rotors_array[], int rotor_n, int argc){ // will put in rotor_n = 0
+
+  //rotates current rotor regardless of whether there's then a notch or not
+  int starting_pos = rotors_array[rotor_n].starting_pos;
+
+  cout << "Rotor " << rotor_n << " has starting position: " << starting_pos << endl << endl;
+
+  if (starting_pos == 25){
+    rotors_array[rotor_n].starting_pos = 0;
+  }
+
+  if (starting_pos != 25){
+  rotors_array[rotor_n].starting_pos ++;
+  }
+
+  cout << "starting position updated to: " << rotors_array[rotor_n].starting_pos << endl << endl;
+
+  // checks if new starting position is a notch; if so updates the next rotors starting position by 1
+  for (int i = 0; i < 26; i++){
+    if (rotors_array[rotor_n].starting_pos == rotors_array[rotor_n].notches[i]){
+      cout << rotors_array[rotor_n].starting_pos << " is a notch so next rotate next rotor..." << endl << endl;
+
+      int number_rotors = (argc - 4);
+
+      // iterates through the remaining rotors
+      if (rotor_n+1 < number_rotors){
+      check_notches(rotors_array, (rotor_n+1), argc);
+      }
+    }
+  }
   }
 
 // Member function definitions:

@@ -39,4 +39,6 @@ void load_positions(int starting_positions[], char** argv, int argc);
 
 void load_rotors_array(rotor rotor_array[], int argc, char** argv);
 
+void check_notches(rotor rotors_array[], int rotor_n, int argc);
+
 #endif
