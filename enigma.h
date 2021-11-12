@@ -35,4 +35,6 @@ void load_plugboard(int plugboard[13][2], char** argv);
 
 void load_notches(int notches[26], char* argv_component);
 
+void load_positions(int starting_positions[], char** argv, int argc);
+
 #endif

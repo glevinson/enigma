@@ -127,6 +127,35 @@ void load_notches(int notches[26], char* argv_component){
   }
   }
 
+
+void load_positions(int starting_positions[], char** argv, int argc){
+  ifstream in_stream;
+  int digit;
+  int number_rotors = (argc-4);
+
+  // int number_rotors = (argc - 4); // - executable, plugboard, reflectors & rotor positions
+
+  in_stream.open(argv[argc-1]); // opens final argument
+
+  if (in_stream.fail()){
+    cout << "File could not be opened :(";
+  }
+
+  int i = 0;
+
+  in_stream >> digit;
+
+  while(!in_stream.eof())
+  {
+    starting_positions[i] = digit;
+    i++;
+
+    in_stream >> digit;
+  }
+
+  in_stream.close();
+  }
+
 // Member function definitions:
 
 int plugboard::check_connections(int inputted_letter, int connections[13][2]){
