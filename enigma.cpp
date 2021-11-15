@@ -288,7 +288,7 @@ int rotor::mapping(int starting_pos, int map[26][2], int inputted_digit){
   int mapped_digit;
   cout << endl << "Starting position (digit at 12 o'clock): " << starting_pos<<endl;
 
-  cout << "Inputted (absolute) digit is: " << inputted_digit<<endl;
+  cout << "Inputted (absolute) digit is: " << inputted_digit << endl;
   // factoring in rotation to the inputted_digit
   // transforming inputted digit (absolute form) to corresponding relative form
   rotation_transformation_1 = inputted_digit + starting_pos; //takes into account rotation

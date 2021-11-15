@@ -5,65 +5,46 @@
 
 using namespace std;
 
+int letter_to_digit(char letter);
+
+int reflector_map(int map[26][2], int digit);
+
 // main Function
 
 int main(int argc, char** argv){
 
-plugboard plugboard;
-
-int letter_to_digit(char letter);
-
 char letter;
-int digit;
+int map[26][2];
 
-// Enter letter
-cout << "Please enter a letter: ";
+cout << "Please input a letter: " << endl ;
 cin >> letter;
+int number = letter_to_digit(letter);
 
-// Update rotor positions
-int number_rotors = (argc - 4);
-rotor rotors_array[number_rotors];
+cout << endl << endl << "Which corresponds to number: " << number << endl << endl;
 
-load_rotors_array(rotors_array, argc, argv);
-check_notches(rotors_array, 0, argc);
+load_map(map, argv[2]);
 
-// Current runs round circuit
-digit = letter_to_digit(letter);
-cout << "which corresponds to the digit " << digit << endl << endl;
+cout << endl << reflector_map(map, number);
 
-// Runs through plugboard (updates to outputted digit)
-load_plugboard(plugboard.connections, argv);
-
-digit = plugboard.check_connections(digit, plugboard.connections);
-cout << endl << endl << "The digit outputted by the plugboard is: " << digit;
-
-// Runs through rotors
-
-for (int i = 0; i < number_rotors; i++){
-  digit = rotors_array[i].mapping(rotors_array[i].starting_pos, rotors_array[i].map, digit);
-}
-
-cout << endl << endl << "The digit after the rotors mapping is: " << digit;
 
 
 
 return 0;
 }
 
+int reflector_map(int map[26][2], int digit){
+  cout << endl << "The inputted digit is: " << digit << endl;
+  for(int i=0; i < 26; i++){
+    if (map[i][0] == digit){
+      cout << "The digit is mapped to: "
+           << map[i][1] << endl << endl;
+      return map[i][1];
+    }
+  }
+}
+
 int letter_to_digit(char letter){
-  int number;
-  number = letter;
-  return (number - 'A');
+  int digit;
+  digit = letter - 'A';
+  return digit;
 }
-
-void load_reflector(rotor reflector){
-  reflector.mapping
-}
-
-
-// The above should be its own function that keeps repeating
-
-
-
-// want to use the above function with i & i + 1, and use iterively
-// but need it to start at 0 and then stop

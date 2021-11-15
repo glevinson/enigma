@@ -27,6 +27,15 @@ class plugboard{
     int check_connections(int inputted_letter, int connections[13][2]);
 };
 
+/*class reflector{
+  public:
+
+    int map[26][2];
+
+    int mapping(int map[26][2])
+
+}*/
+
 // functions:
 
 void load_map(int map[26][2], char* argv_component);
