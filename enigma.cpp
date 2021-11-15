@@ -16,12 +16,12 @@ void check_notches(int starting_pos, int notches[26]){
 
 // function definitions
 
-void load_plugboard(int plugboard[13][2], char** argv){
+void load_plugboard(int plugboard[13][2], char* argv_component){
 
 ifstream in_stream;
 int character;
 
-in_stream.open(argv[1]);
+in_stream.open(argv_component);
 
 if (in_stream.fail()){
   cout << "File could not be opened :(";
@@ -279,7 +279,7 @@ int letter_to_digit(char letter){
   return digit;
 }
 
-void inverse_mapping(rotor rotors_array[], int argc, int digit){
+int inverse_mapping(rotor rotors_array[], int argc, int digit){
 int number_rotors = (argc - 4);
 
 int unordered_map[26];
@@ -304,15 +304,76 @@ for (int rotor_n = 0; rotor_n < number_rotors; rotor_n++){
 }
 
 for (int rotor_n = 0; rotor_n < number_rotors; rotor_n++){
-  digit = rotors_array[((number_rotors-1)-rotor_n)].mapping(rotors_array[((number_rotors-1)-rotor_n)].starting_pos, rotors_array[((number_rotors-1)-rotor_n)].map, digit);
   cout << endl << endl << "The outputted digit of rotor " << ((number_rotors-1)-rotor_n) << " is: "<< digit;
+  digit = rotors_array[((number_rotors-1)-rotor_n)].mapping(rotors_array[((number_rotors-1)-rotor_n)].starting_pos, rotors_array[((number_rotors-1)-rotor_n)].map, digit);
 }
+
+return digit;
 
 /*
 cout << "After inversing: " << endl;
 for (int i = 0; i < 26 ; i++){
   cout << endl << rotors_array[1].map[i][0] << "  " << rotors_array[1].map[i][1] << endl;
 }*/
+}
+
+char encrypt(int argc, char** argv){
+
+char inputted_letter, outputted_letter;
+rotor rotors_array[3];
+int number_rotors = (argc - 4);
+
+// Input letter:
+cout << "Please input a letter: " << endl ;
+cin >> inputted_letter;
+
+// Rotate rotor & check notches
+load_rotors_array(rotors_array, argc, argv);
+check_notches(rotors_array, 0, argc);
+
+// Convert to corresponding digit
+int digit = letter_to_digit(inputted_letter);
+cout << endl << endl << "Which corresponds to number: " << digit << endl << endl;
+
+// Run through the load_plugboard
+class plugboard plugboard;
+
+load_plugboard(plugboard.connections, argv[1]);
+digit = plugboard.check_connections(digit, plugboard.connections);
+
+// Run through rotors
+
+cout << endl << endl << "first rotor: " << endl<< "starting pos*: " << rotors_array[0].starting_pos << endl << endl;
+
+for (int n = 0; n < number_rotors; n++){
+  digit = rotors_array[n].mapping(rotors_array[n].starting_pos, rotors_array[n].map, digit);
+}
+
+// Run through relector
+
+class plugboard reflector; // Q: do you have to put class here because plugboard is also the name of a variable?
+
+load_plugboard(reflector.connections, argv[2]);
+digit = reflector.check_connections(digit, reflector.connections);
+
+cout << endl << endl;
+for (int n = 0; n < 13; n ++){
+  cout << reflector.connections[n][0] << " " << reflector.connections[n][1] << endl;
+}
+
+// Run back through the rotors
+
+digit = inverse_mapping(rotors_array, argc, digit);
+
+// Run back through the plugboard
+digit = plugboard.check_connections(digit, plugboard.connections);
+
+// Convert from integer into chracter
+outputted_letter = digit_to_letter(digit);
+cout << endl << endl << "The encrypted version of inputted letter is: " << outputted_letter << endl << endl;
+
+return outputted_letter;
+
 }
 
 // Member function definitions:
@@ -332,6 +393,7 @@ int plugboard::check_connections(int inputted_letter, int connections[13][2]){
     }
   }
   cout << "There is not a connection";
+  return inputted_letter;
 }
 
 int rotor::mapping(int starting_pos, int map[26][2], int inputted_digit){

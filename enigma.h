@@ -40,7 +40,7 @@ class plugboard{
 
 void load_map(int map[26][2], char* argv_component);
 
-void load_plugboard(int plugboard[13][2], char** argv);
+void load_plugboard(int plugboard[13][2], char* argv_component);
 
 void load_notches(int notches[26], char* argv_component);
 
@@ -54,6 +54,10 @@ int letter_to_digit(char letter);
 
 int reflector_mapping(int map[26][2], int digit);
 
-void inverse_mapping(rotor rotors_array[], int argc, int digit);
+int inverse_mapping(rotor rotors_array[], int argc, int digit);
+
+char encrypt(int argc, char** argv);
+
+char digit_to_letter(int digit);
 
 #endif

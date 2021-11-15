@@ -3,35 +3,24 @@
 #include<cstring>
 #include"enigma.h"
 
+
 using namespace std;
+
+
 
 // main Function
 
 int main(int argc, char** argv){
 
-char letter;
-int reflector_map[26][2];
-int number_rotors = (argc - 4);
-
-cout << "Please input a letter: " << endl ;
-cin >> letter;
-int digit = letter_to_digit(letter);
-
-cout << endl << endl << "Which corresponds to number: " << digit << endl << endl;
-
-load_map(reflector_map, argv[2]);
-
-cout << endl << reflector_mapping(reflector_map, digit);
-
-rotor rotors_array[3];
-
-
-load_rotors_array(rotors_array, argc, argv);
-
-inverse_mapping(rotors_array, argc, digit);
-
+encrypt(argc, argv);
 
 return 0;
+}
+
+char digit_to_letter(int digit){
+  char letter;
+  letter = digit + 'A';
+  return letter;
 }
 
 // We are going to inverse the map
