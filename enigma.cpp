@@ -16,7 +16,7 @@ void check_notches(int starting_pos, int notches[26]){
 
 // function definitions
 
-void load_plugboard(int plugboard[13][2], char* argv_component){
+void plugboard::load_plugboard(int plugboard[13][2], char* argv_component){
 
 ifstream in_stream;
 int character;
@@ -61,7 +61,7 @@ for (row; row < 13; row++){
 }
 }
 
-void load_map(int map[26][2], char* argv_component){
+void rotor::load_map(int map[26][2], char* argv_component){
 
   // index the first column
   for (int i = 0; i < 26; i++){
@@ -93,7 +93,7 @@ void load_map(int map[26][2], char* argv_component){
   in_stream.close();
 }
 
-void load_notches(int notches[26], char* argv_component){
+void rotor::load_notches(int notches[26], char* argv_component){
   ifstream in_stream;
   int ignore; //storing rotors map in the variable ignore so dont accidentally get a mapping digit in our notches array
   int notch;
@@ -128,7 +128,7 @@ void load_notches(int notches[26], char* argv_component){
   }
 
 
-void load_positions(int starting_positions[], char** argv, int argc){
+void rotor::load_positions(int starting_positions[], char** argv, int argc){
   ifstream in_stream;
   int digit;
 
@@ -155,16 +155,16 @@ void load_positions(int starting_positions[], char** argv, int argc){
   in_stream.close();
   }
 
-  void load_rotors_array(rotor rotor_array[],int argc, char** argv){
+  void rotor::load_rotors_array(rotor rotor_array[],int argc, char** argv){
 
   int number_rotors = (argc - 4);
 
   int starting_positions[number_rotors];
-  load_positions(starting_positions, argv, argc);
+  rotor.load_positions(starting_positions, argv, argc);
 
   for(int i = 0; i < number_rotors; i++){
-    load_map(rotor_array[i].map, argv[i+3]); //argv[3] corresponds to the first rotor
-    load_notches(rotor_array[i].notches, argv[i+3]);
+    rotor.load_map(rotor_array[i].map, argv[i+3]); //argv[3] corresponds to the first rotor
+    rotor.load_notches(rotor_array[i].notches, argv[i+3]);
     rotor_array[i].starting_pos = starting_positions[i];
   }
 
@@ -230,7 +230,7 @@ void load_positions(int starting_positions[], char** argv, int argc){
   */
   }
 
-  void check_notches(rotor rotors_array[], int rotor_n, int argc){ // will put in rotor_n = 0
+  void rotor::check_notches(rotor rotors_array[], int rotor_n, int argc){ // will put in rotor_n = 0
 
   //rotates current rotor regardless of whether there's then a notch or not
   int starting_pos = rotors_array[rotor_n].starting_pos;
@@ -256,30 +256,19 @@ void load_positions(int starting_positions[], char** argv, int argc){
 
       // iterates through the remaining rotors
       if (rotor_n+1 < number_rotors){
-      check_notches(rotors_array, (rotor_n+1), argc);
+      rotor_array.check_notches(rotors_array, (rotor_n+1), argc);
       }
     }
   }
   }
 
-int reflector_mapping(int map[26][2], int digit){
-  cout << endl << "The inputted digit is: " << digit << endl;
-  for(int i=0; i < 26; i++){
-    if (map[i][0] == digit){
-      cout << "The digit is mapped to: "
-           << map[i][1] << endl << endl;
-      return map[i][1];
-    }
-  }
-}
-
-int letter_to_digit(char letter){
+int enigma::letter_to_digit(char letter){
   int digit;
   digit = letter - 'A';
   return digit;
 }
 
-int inverse_mapping(rotor rotors_array[], int argc, int digit){
+int rotor::inverse_mapping(rotor rotors_array[], int argc, int digit){
 int number_rotors = (argc - 4);
 
 int unordered_map[26];
@@ -317,28 +306,28 @@ for (int i = 0; i < 26 ; i++){
 }*/
 }
 
-char encrypt(int argc, char** argv){
+char enigma::encrypt(int argc, char** argv){
 
 char inputted_letter, outputted_letter;
-rotor rotors_array[3];
 int number_rotors = (argc - 4);
+rotor rotors_array[number_rotors];
 
 // Input letter:
 cout << "Please input a letter: " << endl ;
 cin >> inputted_letter;
 
 // Rotate rotor & check notches
-load_rotors_array(rotors_array, argc, argv);
-check_notches(rotors_array, 0, argc);
+rotors_array.load_rotors_array(rotors_array, argc, argv);
+rotors_array.check_notches(rotors_array, 0, argc);
 
 // Convert to corresponding digit
-int digit = letter_to_digit(inputted_letter);
+int digit = enigma.letter_to_digit(inputted_letter);
 cout << endl << endl << "Which corresponds to number: " << digit << endl << endl;
 
 // Run through the load_plugboard
 class plugboard plugboard;
 
-load_plugboard(plugboard.connections, argv[1]);
+plugboard.load_plugboard(plugboard.connections, argv[1]);
 digit = plugboard.check_connections(digit, plugboard.connections);
 
 // Run through rotors
@@ -353,7 +342,7 @@ for (int n = 0; n < number_rotors; n++){
 
 class plugboard reflector; // Q: do you have to put class here because plugboard is also the name of a variable?
 
-load_plugboard(reflector.connections, argv[2]);
+reflector.load_plugboard(reflector.connections, argv[2]);
 digit = reflector.check_connections(digit, reflector.connections);
 
 cout << endl << endl;
@@ -363,7 +352,7 @@ for (int n = 0; n < 13; n ++){
 
 // Run back through the rotors
 
-digit = inverse_mapping(rotors_array, argc, digit);
+digit = rotors_array.inverse_mapping(rotors_array, argc, digit);
 
 // Run back through the plugboard
 digit = plugboard.check_connections(digit, plugboard.connections);

@@ -12,7 +12,9 @@ using namespace std;
 
 int main(int argc, char** argv){
 
-encrypt(argc, argv);
+enigma enigma;
+
+enigma.encrypt(argc, argv);
 
 return 0;
 }
