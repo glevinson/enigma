@@ -50,4 +50,10 @@ void load_rotors_array(rotor rotor_array[], int argc, char** argv);
 
 void check_notches(rotor rotors_array[], int rotor_n, int argc);
 
+int letter_to_digit(char letter);
+
+int reflector_mapping(int map[26][2], int digit);
+
+void inverse_mapping(rotor rotors_array[], int argc, int digit);
+
 #endif

@@ -262,6 +262,59 @@ void load_positions(int starting_positions[], char** argv, int argc){
   }
   }
 
+int reflector_mapping(int map[26][2], int digit){
+  cout << endl << "The inputted digit is: " << digit << endl;
+  for(int i=0; i < 26; i++){
+    if (map[i][0] == digit){
+      cout << "The digit is mapped to: "
+           << map[i][1] << endl << endl;
+      return map[i][1];
+    }
+  }
+}
+
+int letter_to_digit(char letter){
+  int digit;
+  digit = letter - 'A';
+  return digit;
+}
+
+void inverse_mapping(rotor rotors_array[], int argc, int digit){
+int number_rotors = (argc - 4);
+
+int unordered_map[26];
+
+/*cout << "Before inversing: " << endl;
+for (int i = 0; i < 26 ; i++){
+  cout << endl << rotors_array[1].map[i][0] << "  " << rotors_array[1].map[i][1] << endl;
+}*/
+
+for (int rotor_n = 0; rotor_n < number_rotors; rotor_n++){
+  for (int number = 0; number < 26; number++){
+    for (int j = 0; j < 26; j++){
+      if (rotors_array[rotor_n].map[j][1] == number){
+        unordered_map[number] = rotors_array[rotor_n].map[j][0];
+      }
+    }
+  }
+  for (int i = 0; i < 26; i++){
+    rotors_array[rotor_n].map[i][0] = i;
+    rotors_array[rotor_n].map[i][1] = unordered_map[i];
+  }
+}
+
+for (int rotor_n = 0; rotor_n < number_rotors; rotor_n++){
+  digit = rotors_array[((number_rotors-1)-rotor_n)].mapping(rotors_array[((number_rotors-1)-rotor_n)].starting_pos, rotors_array[((number_rotors-1)-rotor_n)].map, digit);
+  cout << endl << endl << "The outputted digit of rotor " << ((number_rotors-1)-rotor_n) << " is: "<< digit;
+}
+
+/*
+cout << "After inversing: " << endl;
+for (int i = 0; i < 26 ; i++){
+  cout << endl << rotors_array[1].map[i][0] << "  " << rotors_array[1].map[i][1] << endl;
+}*/
+}
+
 // Member function definitions:
 
 int plugboard::check_connections(int inputted_letter, int connections[13][2]){
@@ -299,7 +352,7 @@ int rotor::mapping(int starting_pos, int map[26][2], int inputted_digit){
   cout << "Relative version is: " << rotation_transformation_1<<endl;
 
   // mapping the relative digit
-  mapped_digit = map[rotation_transformation_1][1];
+  mapped_digit = map[rotation_transformation_1][1]; // This mapping doesnt compensate for THE RETURN JOURNEY (ONCE DONE - COMPLETE!)
   cout << "Which has been mapped to: " << mapped_digit << endl;
 
   // removing affects of rotation
