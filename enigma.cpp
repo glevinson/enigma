@@ -66,7 +66,7 @@ int count = 0;
 for (int number = 0; number < 26; number++){ // iterates through all the numbers (0 - 25)
   for (int j = 0; j < 13; j++){ // iterates through every row
     if (map[j][0] == map[j][1]){ // if a digit maps to itself
-      cerr << "1). INVALID_REFLECTOR_MAPPING" << "with row: " << j << " and entry " << map[j][0] << " " << number;
+      cerr << "1). INVALID_REFLECTOR_MAPPING";
 
     }
     if (map[j][0] == number || map[j][1] == number){ // If a number appears in a connection, count it
@@ -369,7 +369,7 @@ void load_positions(int starting_positions[], char** argv, int argc){
   */
   }
 
-  void check_notches(rotor rotors_array[], int rotor_n, int argc){ // will put in rotor_n = 0
+  void check_notches(rotor rotors_array[], int rotor_n, int argc){ // will put in rotor_n = 0 // ROTATE THE THIRD ONE TO THE LEFT MOST
 
   //rotates current rotor regardless of whether there's then a notch or not
   int starting_pos = rotors_array[rotor_n].starting_pos;
@@ -391,11 +391,9 @@ void load_positions(int starting_positions[], char** argv, int argc){
     if (rotors_array[rotor_n].starting_pos == rotors_array[rotor_n].notches[i]){
       cout << rotors_array[rotor_n].starting_pos << " is a notch so next rotate next rotor..." << endl << endl;
 
-      int number_rotors = (argc - 4);
-
       // iterates through the remaining rotors
-      if (rotor_n+1 < number_rotors){
-      check_notches(rotors_array, (rotor_n+1), argc);
+      if (rotor_n-1 >= 0){
+      check_notches(rotors_array, (rotor_n-1), argc);
       }
     }
   }
@@ -449,8 +447,8 @@ for (int rotor_n = 0; rotor_n < number_rotors; rotor_n++){
 }
 
 for (int rotor_n = 0; rotor_n < number_rotors; rotor_n++){
-  cout << endl << endl << "The outputted digit of rotor " << ((number_rotors-1)-rotor_n) << " is: "<< digit;
-  digit = rotors_array[((number_rotors-1)-rotor_n)].mapping(rotors_array[((number_rotors-1)-rotor_n)].starting_pos, rotors_array[((number_rotors-1)-rotor_n)].map, digit);
+  cout << endl << endl << "The outputted digit of rotor " << rotor_n << " is: "<< digit;
+  digit = rotors_array[rotor_n].mapping(rotors_array[rotor_n].starting_pos, rotors_array[rotor_n].map, digit);
 }
 
 return digit;
@@ -471,7 +469,7 @@ char encrypt(char inputted_letter, int argc, char** argv){
 
   // Rotate rotor & check notches
   load_rotors_array(rotors_array, argc, argv);
-  check_notches(rotors_array, 0, argc);
+  check_notches(rotors_array, number_rotors-1, argc);
 
   // Convert to corresponding digit
   int digit = letter_to_digit(inputted_letter);
@@ -483,11 +481,11 @@ class plugboard plugboard;
 load_plugboard(plugboard.connections, argv[1]);
 digit = check_connections(digit, plugboard.connections);
 
-// Run through rotors
+// Run through rotors (in descending order to the first one)
 
 cout << endl << endl << "first rotor: " << endl<< "starting pos*: " << rotors_array[0].starting_pos << endl << endl;
 
-for (int n = 0; n < number_rotors; n++){
+for (int n = number_rotors-1; n >= 0 ; n--){
   digit = rotors_array[n].mapping(rotors_array[n].starting_pos, rotors_array[n].map, digit);
 }
 
@@ -509,6 +507,7 @@ digit = inverse_mapping(rotors_array, argc, digit);
 
 // Run back through the plugboard
 digit = check_connections(digit, plugboard.connections);
+
 
 // Convert from integer into chracter
 outputted_letter = digit_to_letter(digit);
