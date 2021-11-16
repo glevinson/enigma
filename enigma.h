@@ -59,7 +59,7 @@ int reflector_mapping(int map[26][2], int digit);
 
 int inverse_mapping(rotor rotors_array[], int argc, int digit);
 
-char encrypt(int argc, char** argv);
+char encrypt(char inputted_letter, int argc, char** argv);
 
 char digit_to_letter(int digit);
 

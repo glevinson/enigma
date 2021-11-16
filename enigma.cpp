@@ -462,48 +462,20 @@ for (int i = 0; i < 26 ; i++){
 }*/
 }
 
-char encrypt(int argc, char** argv){
+char encrypt(char inputted_letter, int argc, char** argv){
 
-char inputted_letter, outputted_letter;
-rotor rotors_array[3];
-int number_rotors = (argc - 4);
-int ascii;
+  char outputted_letter;
+  int number_rotors = (argc - 4);
+  rotor rotors_array[number_rotors];
+  int ascii;
 
-// Input letter:
-do{
-cout << "Please input a letter: " << endl ;
-cin >> inputted_letter;
-ascii = inputted_letter;
-cout << "ascii number " << ascii << endl << endl;
-}
-while(ascii == 9 || ascii == 13 || ascii == 32); // Keep asking for input letter if input a letter (tab, return, space)
+  // Rotate rotor & check notches
+  load_rotors_array(rotors_array, argc, argv);
+  check_notches(rotors_array, 0, argc);
 
-if (ascii < 9){
-  cerr << "INVALID_INPUT_CHARACTER";
-}
-if (ascii > 9 && ascii < 13){
-  cerr << "INVALID_INPUT_CHARACTER";
-}
-
-if (ascii > 13 && ascii < 32){
-  cerr << "INVALID_INPUT_CHARACTER";
-}
-
-if (ascii > 32 && ascii < 65){
-  cerr << "INVALID_INPUT_CHARACTER";
-}
-
-if (ascii > 90){
-  cerr << "INVALID_INPUT_CHARACTER";
-}
-
-// Rotate rotor & check notches
-load_rotors_array(rotors_array, argc, argv);
-check_notches(rotors_array, 0, argc);
-
-// Convert to corresponding digit
-int digit = letter_to_digit(inputted_letter);
-cout << endl << endl << "Which corresponds to number: " << digit << endl << endl;
+  // Convert to corresponding digit
+  int digit = letter_to_digit(inputted_letter);
+  cout << endl << endl << "Which corresponds to number: " << digit << endl << endl;
 
 // Run through the load_plugboard
 class plugboard plugboard;
