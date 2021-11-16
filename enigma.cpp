@@ -4,22 +4,10 @@
 
 using namespace std;
 
-// Function currently working on:
-/*
-void check_notches(int starting_pos, int notches[26]){
-  for (int j=0; j<= 25; j++){
-    if (notches[j] == starting_pos){
-      // tell next rotor to rotate...
-    }
-  }
-}*/
-
-// function definitions
-
-void plugboard::load_plugboard(int plugboard[13][2], char* argv_component){
+void load_reflector(int map[13][2], char* argv_component){ //argv[2]
 
 ifstream in_stream;
-int character;
+int digit;
 
 in_stream.open(argv_component);
 
@@ -30,13 +18,22 @@ if (in_stream.fail()){
 int row = 0;
 int column = 0;
 
-in_stream >> character;
+in_stream >> digit;
 
 while(!in_stream.eof())
 {
 
-  cout << character << " is in [row][column]: " << row << " " << column << endl;
-  plugboard[row][column] = character;
+  if (in_stream.fail()){ //CHECKING FOR NON_NUMERIC CHARACTER
+    cerr << "NON_NUMERIC_CHARACTER";
+  }
+
+  cout << digit << " is in [row][column]: " << row << " " << column << endl;
+
+  if ( digit < 0 || digit > 25 ){
+    cerr << "INVALID_INDEX";
+  }
+
+  map[row][column] = digit;
 
   int col = column;
 
@@ -49,10 +46,115 @@ while(!in_stream.eof())
     row ++;
     column --;
   }
-  in_stream >> character;
+  in_stream >> digit;
+
 }
 
 in_stream.close();
+
+
+if (row != 13){
+  cerr << "INCORRECT_NUMBER_OF_REFLECTOR_PARAMETERS";
+}
+
+cout << "MAPPING IS: " << endl;
+for (int j = 0; j < 13; j++){
+  cout << map[j][0] << " " << map[j][1] << endl;
+  }
+
+int count = 0;
+for (int number = 0; number < 26; number++){ // iterates through all the numbers (0 - 25)
+  for (int j = 0; j < 13; j++){ // iterates through every row
+    if (map[j][0] == map[j][1]){ // if a digit maps to itself
+      cerr << "1). INVALID_REFLECTOR_MAPPING" << "with row: " << j << " and entry " << map[j][0] << " " << number;
+
+    }
+    if (map[j][0] == number || map[j][1] == number){ // If a number appears in a connection, count it
+      count++;
+    }
+  }
+  cout << endl << "NUMBER: " << number << "WITH COUNT: " << count << endl;
+  if (count > 1){ // if a number appears more than once in connections (i.e. more than 1)
+    cerr << "2). INVALID_REFLECTOR_MAPPING";
+  }
+  count = 0;
+}
+}
+
+void load_plugboard(int plugboard[13][2], char* argv_component){
+
+ifstream in_stream;
+int digit;
+
+in_stream.open(argv_component);
+
+if (in_stream.fail()){
+  cout << "File could not be opened :(";
+}
+
+int row = 0;
+int column = 0;
+int i = 0;
+
+in_stream >> digit;
+
+cout << "I VALUE : " << i << endl;
+
+while(!in_stream.eof())
+{
+
+  if (in_stream.fail()){ //CHECKING FOR NON_NUMERIC CHARACTER
+    cerr << "NON_NUMERIC_CHARACTER";
+  }
+
+  if (digit < 0 || digit > 25){
+    cerr << "INVALID_INDEX";
+  }
+
+  cout << digit << " is in [row][column]: " << row << " " << column << endl;
+  plugboard[row][column] = digit;
+  i++;
+
+  int col = column;
+
+  // updating position
+  if (col == 0){
+    column ++; // then column = 1 which means it applies to next boolean expression
+  }
+
+  if (col == 1){
+    row ++;
+    column --;
+  }
+  in_stream >> digit;
+
+  cout << "LOOP I VALUE: " << i << endl;
+}
+
+in_stream.close();
+
+cout << "I VALUE IS : " << i << endl << endl;
+
+if (i % 2 != 0){ // checking if number of inputted digits is even
+  cerr << "INCORRECT_NUMBER_OF_PLUGBOARD_PARAMETERS";
+}
+cout << "ROW " << row;
+int count = 0;
+for (int number = 0; number < 26; number++){ // iterates through all the numbers (0 - 25)
+  for (int j = 0; j < row; j++){ // iterates through every row
+    if (plugboard[j][0] == plugboard[j][1]){ // if a digit maps to itself
+      cerr << "1). IMPOSSIBLE_PLUGBOARD_CONFIGURATION";
+    }
+    if (plugboard[j][0] == number || plugboard[j][1] == number){ // If a number appears in a connection, count it
+      count++;
+    }
+  }
+  cout << endl << "NUMBER: " << number << "WITH COUNT: " << count << endl;
+  if (count > 1){ // if a number appears more than once in connections (i.e. more than 1)
+    cerr << "2). IMPOSSIBLE_PLUGBOARD_CONFIGURATION";
+  }
+  count = 0;
+}
 
 // Now row points to the first column & next row of the last connection
 for (row; row < 13; row++){
@@ -61,7 +163,8 @@ for (row; row < 13; row++){
 }
 }
 
-void rotor::load_map(int map[26][2], char* argv_component){
+
+void load_map(int map[26][2], char* argv_component){
 
   // index the first column
   for (int i = 0; i < 26; i++){
@@ -81,19 +184,48 @@ void rotor::load_map(int map[26][2], char* argv_component){
 
   in_stream >> digit;
 
+
   while(!in_stream.eof())
   {
+
+    if (in_stream.fail()){ //CHECKING FOR NON_NUMERIC CHARACTER
+      cerr << "NON_NUMERIC_CHARACTER";
+    }
 
     map[row][1] = digit;
     row++;
 
     in_stream >> digit;
+
+    if ( digit > 25 || digit < 0 ){
+      cerr << "INVALID_INDEX";
+    }
+
   }
 
   in_stream.close();
+
+// iterates through the maps second column
+// If a number appears twice, get INVALID_ROTOR_MAPPING error
+
+int count = 0;
+for (int number = 0; number < 26; number ++){ // checks each number
+  for (int i = 0; i < 26; i++){ // iterates through second column checking for each number
+    if (map[i][1] == number){
+      count ++;
+    }
+  }
+  if (count > 1){
+    cerr << "INVALID_ROTOR_MAPPING";
+    cout << "number: " << number << " ";
+    cout << "count " << count << " ";
+  }
+  count = 0;
 }
 
-void rotor::load_notches(int notches[26], char* argv_component){
+}
+
+void load_notches(int notches[26], char* argv_component){
   ifstream in_stream;
   int ignore; //storing rotors map in the variable ignore so dont accidentally get a mapping digit in our notches array
   int notch;
@@ -128,11 +260,12 @@ void rotor::load_notches(int notches[26], char* argv_component){
   }
 
 
-void rotor::load_positions(int starting_positions[], char** argv, int argc){
+void load_positions(int starting_positions[], char** argv, int argc){
   ifstream in_stream;
   int digit;
+  int number_rotors = (argc - 4);
 
-  // int number_rotors = (argc - 4); // - executable, plugboard, reflectors & rotor positions
+  // int number_rotors = (argc - 4); // - executable, plugboard, reflector & rotors' positions
 
   in_stream.open(argv[argc-1]); // opens final argument
 
@@ -140,31 +273,37 @@ void rotor::load_positions(int starting_positions[], char** argv, int argc){
     cout << "File could not be opened :(";
   }
 
-  int i = 0;
+  int count = 0;
 
   in_stream >> digit;
 
   while(!in_stream.eof())
   {
-    starting_positions[i] = digit;
-    i++;
+    starting_positions[count] = digit;
+    count++;
 
     in_stream >> digit;
+  }
+
+
+
+  if (count < number_rotors){ // I.e. if the number of positions is less than the number of rotors
+    cerr << "NO_ROTOR_STARTING_POSITION";
   }
 
   in_stream.close();
   }
 
-  void rotor::load_rotors_array(rotor rotor_array[],int argc, char** argv){
+  void load_rotors_array(rotor rotor_array[],int argc, char** argv){
 
   int number_rotors = (argc - 4);
 
   int starting_positions[number_rotors];
-  rotor.load_positions(starting_positions, argv, argc);
+  load_positions(starting_positions, argv, argc);
 
   for(int i = 0; i < number_rotors; i++){
-    rotor.load_map(rotor_array[i].map, argv[i+3]); //argv[3] corresponds to the first rotor
-    rotor.load_notches(rotor_array[i].notches, argv[i+3]);
+    load_map(rotor_array[i].map, argv[i+3]); //argv[3] corresponds to the first rotor
+    load_notches(rotor_array[i].notches, argv[i+3]);
     rotor_array[i].starting_pos = starting_positions[i];
   }
 
@@ -230,7 +369,7 @@ void rotor::load_positions(int starting_positions[], char** argv, int argc){
   */
   }
 
-  void rotor::check_notches(rotor rotors_array[], int rotor_n, int argc){ // will put in rotor_n = 0
+  void check_notches(rotor rotors_array[], int rotor_n, int argc){ // will put in rotor_n = 0
 
   //rotates current rotor regardless of whether there's then a notch or not
   int starting_pos = rotors_array[rotor_n].starting_pos;
@@ -256,19 +395,36 @@ void rotor::load_positions(int starting_positions[], char** argv, int argc){
 
       // iterates through the remaining rotors
       if (rotor_n+1 < number_rotors){
-      rotor_array.check_notches(rotors_array, (rotor_n+1), argc);
+      check_notches(rotors_array, (rotor_n+1), argc);
       }
     }
   }
   }
 
-int enigma::letter_to_digit(char letter){
+int reflector_mapping(int map[26][2], int digit){
+  cout << endl << "The inputted digit is: " << digit << endl;
+  for(int i=0; i < 26; i++){
+    if (map[i][0] == digit){
+      cout << "The digit is mapped to: "
+           << map[i][1] << endl << endl;
+      return map[i][1];
+    }
+  }
+}
+
+int letter_to_digit(char letter){
   int digit;
   digit = letter - 'A';
   return digit;
 }
 
-int rotor::inverse_mapping(rotor rotors_array[], int argc, int digit){
+char digit_to_letter(int digit){
+  char letter;
+  letter = digit + 'A';
+  return letter;
+}
+
+int inverse_mapping(rotor rotors_array[], int argc, int digit){
 int number_rotors = (argc - 4);
 
 int unordered_map[26];
@@ -306,29 +462,54 @@ for (int i = 0; i < 26 ; i++){
 }*/
 }
 
-char enigma::encrypt(int argc, char** argv){
+char encrypt(int argc, char** argv){
 
 char inputted_letter, outputted_letter;
+rotor rotors_array[3];
 int number_rotors = (argc - 4);
-rotor rotors_array[number_rotors];
+int ascii;
 
 // Input letter:
+do{
 cout << "Please input a letter: " << endl ;
 cin >> inputted_letter;
+ascii = inputted_letter;
+cout << "ascii number " << ascii << endl << endl;
+}
+while(ascii == 9 || ascii == 13 || ascii == 32); // Keep asking for input letter if input a letter (tab, return, space)
+
+if (ascii < 9){
+  cerr << "INVALID_INPUT_CHARACTER";
+}
+if (ascii > 9 && ascii < 13){
+  cerr << "INVALID_INPUT_CHARACTER";
+}
+
+if (ascii > 13 && ascii < 32){
+  cerr << "INVALID_INPUT_CHARACTER";
+}
+
+if (ascii > 32 && ascii < 65){
+  cerr << "INVALID_INPUT_CHARACTER";
+}
+
+if (ascii > 90){
+  cerr << "INVALID_INPUT_CHARACTER";
+}
 
 // Rotate rotor & check notches
-rotors_array.load_rotors_array(rotors_array, argc, argv);
-rotors_array.check_notches(rotors_array, 0, argc);
+load_rotors_array(rotors_array, argc, argv);
+check_notches(rotors_array, 0, argc);
 
 // Convert to corresponding digit
-int digit = enigma.letter_to_digit(inputted_letter);
+int digit = letter_to_digit(inputted_letter);
 cout << endl << endl << "Which corresponds to number: " << digit << endl << endl;
 
 // Run through the load_plugboard
 class plugboard plugboard;
 
-plugboard.load_plugboard(plugboard.connections, argv[1]);
-digit = plugboard.check_connections(digit, plugboard.connections);
+load_plugboard(plugboard.connections, argv[1]);
+digit = check_connections(digit, plugboard.connections);
 
 // Run through rotors
 
@@ -340,22 +521,22 @@ for (int n = 0; n < number_rotors; n++){
 
 // Run through relector
 
-class plugboard reflector; // Q: do you have to put class here because plugboard is also the name of a variable?
+class reflector reflector; // Q: do you have to put class here because plugboard is also the name of a variable?
 
-reflector.load_plugboard(reflector.connections, argv[2]);
-digit = reflector.check_connections(digit, reflector.connections);
+load_reflector(reflector.map, argv[2]);
+digit = check_connections(digit, reflector.map);
 
 cout << endl << endl;
 for (int n = 0; n < 13; n ++){
-  cout << reflector.connections[n][0] << " " << reflector.connections[n][1] << endl;
+  cout << reflector.map[n][0] << " " << reflector.map[n][1] << endl;
 }
 
 // Run back through the rotors
 
-digit = rotors_array.inverse_mapping(rotors_array, argc, digit);
+digit = inverse_mapping(rotors_array, argc, digit);
 
 // Run back through the plugboard
-digit = plugboard.check_connections(digit, plugboard.connections);
+digit = check_connections(digit, plugboard.connections);
 
 // Convert from integer into chracter
 outputted_letter = digit_to_letter(digit);
@@ -365,9 +546,10 @@ return outputted_letter;
 
 }
 
+
 // Member function definitions:
 
-int plugboard::check_connections(int inputted_letter, int connections[13][2]){
+int check_connections(int inputted_letter, int connections[13][2]){
   cout << endl << "The inputted letter is: " << inputted_letter << endl;
   for(int i=0; i <= 12; i++){
     if (connections[i][0] == inputted_letter){
