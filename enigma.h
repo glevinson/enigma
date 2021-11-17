@@ -60,5 +60,7 @@ class enigma{
     char digit_to_letter(int digit);
 };
 
+bool invalid_input_character(int ascii);
+
 
 #endif

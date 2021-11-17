@@ -454,6 +454,12 @@ for (int i = 0; i < 26 ; i++){
 string encrypt_string(string str, enigma enigma, int argc, char** argv){
 
   int number_rotors = (argc - 4);
+  char inputted_letter;
+  char outputted_letter;
+  int ascii;
+  int string_length = str.size();
+
+  //cout << endl << endl << "The string length is: " << string_length << endl << endl;
 
   if (number_rotors <= 0){
     number_rotors = 0;
@@ -465,36 +471,44 @@ string encrypt_string(string str, enigma enigma, int argc, char** argv){
   plugboard.load_plugboard(plugboard.connections, argv[1]);
   reflector.load_reflector(reflector.map, argv[2]);
 
-  int string_length = str.size();
+  // outcome if 0 rotors
+  if (number_rotors == 0){
 
-  //cout << endl << endl << "The string length is: " << string_length << endl << endl;
+    for (int letter_n = 0; letter_n < string_length; letter_n++){
+      inputted_letter = str[letter_n];
+
+      ascii = inputted_letter;
+      if (invalid_input_character(ascii)){
+        cerr << "INVALID_INPUT_CHARACTER";
+      }
+
+      if (ascii == 9 || ascii == 13 || ascii == 32){
+        str[letter_n] = ' ';
+      }
+
+      if (ascii != 9 && ascii != 13 && ascii != 32 && number_rotors == 0){
+        outputted_letter = enigma.no_rotors_encrypt(inputted_letter, enigma, plugboard, reflector, argc, argv);
+        str[letter_n] = outputted_letter;
+      }
+    }
+  return str;
+}
+
+  class rotor rotors_array[number_rotors];
+  rotors_array[0].load_rotors_array(rotors_array, argc, argv);
+
+  /*class rotor rotors_array[number_rotors];
+  rotors_array[0].load_rotors_array(rotors_array, argc, argv);*/
 
   for (int letter_n = 0; letter_n < string_length; letter_n++){
 
-    char inputted_letter = str[letter_n];
-    //cout << "inputted letter" << inputted_letter;
-    char outputted_letter;
-    int ascii;
+    inputted_letter = str[letter_n];
 
     ascii = inputted_letter;
 
-    if (ascii < 9){
-      cerr << "INVALID_INPUT_CHARACTER";
-    }
-    if (ascii > 9 && ascii < 13){
-      cerr << "INVALID_INPUT_CHARACTER";
-    }
-
-    if (ascii > 13 && ascii < 32){
-      cerr << "INVALID_INPUT_CHARACTER";
-    }
-
-    if (ascii > 32 && ascii < 65){
-      cerr << "INVALID_INPUT_CHARACTER";
-    }
-
-    if (ascii > 90){
-      cerr << "INVALID_INPUT_CHARACTER";
+    cout << endl << "ascii: " << ascii << endl;
+    if (invalid_input_character(ascii)){
+      cerr << "INVALID_INPUT_CHARACTER_2";
     }
 
     if (ascii == 9 || ascii == 13 || ascii == 32){
@@ -502,20 +516,34 @@ string encrypt_string(string str, enigma enigma, int argc, char** argv){
     }
 
     if (ascii != 9 && ascii != 13 && ascii != 32 && number_rotors > 0){ // Keep asking for input letter if input a letter (tab, return, space)
-
-      class rotor rotors_array[number_rotors];
-      rotors_array[0].load_rotors_array(rotors_array, argc, argv);
-
       outputted_letter = enigma.encrypt(inputted_letter, enigma, plugboard, reflector, rotors_array, argc, argv);
-      str[letter_n] = outputted_letter;
-    }
-
-    if (ascii != 9 && ascii != 13 && ascii != 32 && number_rotors == 0){
-      outputted_letter = enigma.no_rotors_encrypt(inputted_letter, enigma, plugboard, reflector, argc, argv);
       str[letter_n] = outputted_letter;
     }
   }
   return str;
+}
+
+bool invalid_input_character(int ascii){
+  if (ascii < 9){
+    return true;
+  }
+
+  if (ascii > 9 && ascii < 13){
+    return true;
+  }
+
+  if (ascii > 13 && ascii < 32){
+    return true;
+  }
+
+  if (ascii > 32 && ascii < 65){
+    return true;
+  }
+
+  if (ascii > 90){
+    return true;
+  }
+  return false;
 }
 
 string input_string(string str){
