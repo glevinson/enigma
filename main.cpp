@@ -26,7 +26,6 @@ try
 
 // catching any error codes
 catch (int error){
-  cout << endl << "Error code is: " << error;
   return error;
 }
 
