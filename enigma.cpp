@@ -16,7 +16,8 @@ void rotor::load_positions(int starting_positions[], char** argv, int argc){
   in_stream.open(argv[argc-1]); // opens final argument
 
   if (in_stream.fail()){
-    cout << "File could not be opened :(";
+    cerr << "ERROR_OPENING_CONFIGURATION_FILE";
+    throw 11;
   }
 
   int count = 0;
@@ -33,8 +34,9 @@ void rotor::load_positions(int starting_positions[], char** argv, int argc){
 
 
 
-  if (count < number_rotors){ // I.e. if the number of positions is less than the number of rotors
+  if (count != number_rotors){ // I.e. if the number of positions is less than the number of rotors
     cerr << "NO_ROTOR_STARTING_POSITION";
+    throw 8;
   }
 
   in_stream.close();
@@ -48,7 +50,8 @@ int digit;
 in_stream.open(argv_component);
 
 if (in_stream.fail()){
-  cout << "File could not be opened :(";
+  cerr << "ERROR_OPENING_CONFIGURATION_FILE";
+  throw 11;
 }
 
 int row = 0;
@@ -61,12 +64,14 @@ while(!in_stream.eof())
 
   if (in_stream.fail()){ //CHECKING FOR NON_NUMERIC CHARACTER
     cerr << "NON_NUMERIC_CHARACTER";
+    throw 4;
   }
 
   //cout << digit << " is in [row][column]: " << row << " " << column << endl;
 
   if ( digit < 0 || digit > 25 ){
     cerr << "INVALID_INDEX";
+    throw 3;
   }
 
   map[row][column] = digit;
@@ -91,6 +96,7 @@ in_stream.close();
 
 if (row != 13){
   cerr << "INCORRECT_NUMBER_OF_REFLECTOR_PARAMETERS";
+  throw 10;
 }
 
 /*cout << "MAPPING IS: " << endl;
@@ -102,7 +108,8 @@ int count = 0;
 for (int number = 0; number < 26; number++){ // iterates through all the numbers (0 - 25)
   for (int j = 0; j < 13; j++){ // iterates through every row
     if (map[j][0] == map[j][1]){ // if a digit maps to itself
-      cerr << "1). INVALID_REFLECTOR_MAPPING";
+      cerr << "INVALID_REFLECTOR_MAPPING";
+      throw 9;
 
     }
     if (map[j][0] == number || map[j][1] == number){ // If a number appears in a connection, count it
@@ -110,7 +117,8 @@ for (int number = 0; number < 26; number++){ // iterates through all the numbers
     }
   }
   if (count > 1){ // if a number appears more than once in connections (i.e. more than 1)
-    cerr << "2). INVALID_REFLECTOR_MAPPING";
+    cerr << "INVALID_REFLECTOR_MAPPING";
+    throw 9;
   }
   count = 0;
 }
@@ -124,7 +132,8 @@ int digit;
 in_stream.open(argv_component);
 
 if (in_stream.fail()){
-  cout << "File could not be opened :(";
+  cerr << "ERROR_OPENING_CONFIGURATION_FILE";
+  throw 11;
 }
 
 int row = 0;
@@ -140,10 +149,12 @@ while(!in_stream.eof())
 
   if (in_stream.fail()){ //CHECKING FOR NON_NUMERIC CHARACTER
     cerr << "NON_NUMERIC_CHARACTER";
+    throw 4;
   }
 
   if (digit < 0 || digit > 25){
     cerr << "INVALID_INDEX";
+    throw 3;
   }
 
   //cout << digit << " is in [row][column]: " << row << " " << column << endl;
@@ -172,13 +183,15 @@ in_stream.close();
 
 if (i % 2 != 0){ // checking if number of inputted digits is even
   cerr << "INCORRECT_NUMBER_OF_PLUGBOARD_PARAMETERS";
+  throw 6;
 }
 //cout << "ROW " << row;
 int count = 0;
 for (int number = 0; number < 26; number++){ // iterates through all the numbers (0 - 25)
   for (int j = 0; j < row; j++){ // iterates through every row
     if (plugboard[j][0] == plugboard[j][1]){ // if a digit maps to itself
-      cerr << "1). IMPOSSIBLE_PLUGBOARD_CONFIGURATION";
+      cerr << "IMPOSSIBLE_PLUGBOARD_CONFIGURATION";
+      throw 5;
     }
     if (plugboard[j][0] == number || plugboard[j][1] == number){ // If a number appears in a connection, count it
       count++;
@@ -186,7 +199,8 @@ for (int number = 0; number < 26; number++){ // iterates through all the numbers
   }
   //cout << endl << "NUMBER: " << number << "WITH COUNT: " << count << endl;
   if (count > 1){ // if a number appears more than once in connections (i.e. more than 1)
-    cerr << "2). IMPOSSIBLE_PLUGBOARD_CONFIGURATION";
+    cerr << "IMPOSSIBLE_PLUGBOARD_CONFIGURATION";
+    throw 5;
   }
   count = 0;
 }
@@ -212,7 +226,8 @@ void rotor::load_map(int map[26][2], char* argv_component){
   in_stream.open(argv_component);
 
   if (in_stream.fail()){
-    cout << "File could not be opened :(";
+    cerr << "ERROR_OPENING_CONFIGURATION_FILE";
+    throw 11;
   }
 
   int row = 0;
@@ -225,16 +240,18 @@ void rotor::load_map(int map[26][2], char* argv_component){
 
     if (in_stream.fail()){ //CHECKING FOR NON_NUMERIC CHARACTER
       cerr << "NON_NUMERIC_CHARACTER";
+      throw 4;
+    }
+
+    if ( digit > 25 || digit < 0 ){
+      cerr << "INVALID_INDEX";
+      throw 3;
     }
 
     map[row][1] = digit;
     row++;
 
     in_stream >> digit;
-
-    if ( digit > 25 || digit < 0 ){
-      cerr << "INVALID_INDEX";
-    }
 
   }
 
@@ -252,6 +269,7 @@ for (int number = 0; number < 26; number ++){ // checks each number
   }
   if (count > 1){
     cerr << "INVALID_ROTOR_MAPPING";
+    throw 7;
     //cout << "number: " << number << " ";
     //cout << "count " << count << " ";
   }
@@ -268,7 +286,8 @@ void rotor::load_notches(int notches[26], char* argv_component){
   in_stream.open(argv_component);
 
   if (in_stream.fail()){
-    cout << "File could not be opened :(";
+    cerr << "ERROR_OPENING_CONFIGURATION_FILE";
+    throw 11;
   }
 
   for(int count = 0; count < 26; count++){ // cycling through the first 26 components so we are just accessing the notches
@@ -480,6 +499,7 @@ string encrypt_string(string str, enigma enigma, int argc, char** argv){
       ascii = inputted_letter;
       if (invalid_input_character(ascii)){
         cerr << "INVALID_INPUT_CHARACTER";
+        throw 2;
       }
 
       if (ascii == 9 || ascii == 13 || ascii == 32){
@@ -506,9 +526,9 @@ string encrypt_string(string str, enigma enigma, int argc, char** argv){
 
     ascii = inputted_letter;
 
-    cout << endl << "ascii: " << ascii << endl;
     if (invalid_input_character(ascii)){
-      cerr << "INVALID_INPUT_CHARACTER_2";
+      cerr << "INVALID_INPUT_CHARACTER";
+      throw 2;
     }
 
     if (ascii == 9 || ascii == 13 || ascii == 32){

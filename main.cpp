@@ -19,7 +19,16 @@ string string;
 
 string = input_string(string);
 
-cout << encrypt_string(string, enigma, argc, argv);
+try
+{
+  cout << encrypt_string(string, enigma, argc, argv);
+}
+
+// catching any error codes
+catch (int error){
+  cout << endl << "Error code is: " << error;
+  return error;
+}
 
 return 0;
 }
