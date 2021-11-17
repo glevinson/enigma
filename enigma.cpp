@@ -478,6 +478,11 @@ string encrypt_string(string str, enigma enigma, int argc, char** argv){
   int ascii;
   int string_length = str.size();
 
+  if (argc < 3){
+    cerr << "INSUFFICIENT_NUMBER_OF_PARAMETERS";
+    throw 1;
+  }
+
   //cout << endl << endl << "The string length is: " << string_length << endl << endl;
 
   if (number_rotors <= 0){
