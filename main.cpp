@@ -22,7 +22,7 @@ string string;
 
 string = input_string(string);
 
-encrypt_string(string, argc, argv);
+cout << encrypt_string(string, argc, argv);
 
 return 0;
 }
@@ -38,13 +38,14 @@ string encrypt_string(string str, int argc, char** argv){
 
 int number_rotors = (argc - 4);
 
+class enigma enigma;
 class plugboard plugboard;
 class reflector reflector; // Q: do you have to put class here because plugboard is also the name of a variable?
 class rotor rotors_array[number_rotors];
 
-load_plugboard(plugboard.connections, argv[1]);
-load_rotors_array(rotors_array, argc, argv);
-load_reflector(reflector.map, argv[2]);
+plugboard.load_plugboard(plugboard.connections, argv[1]);
+rotors_array[0].load_rotors_array(rotors_array, argc, argv);
+reflector.load_reflector(reflector.map, argv[2]);
 
   int string_length = str.size();
 
