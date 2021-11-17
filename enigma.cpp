@@ -27,7 +27,7 @@ while(!in_stream.eof())
     cerr << "NON_NUMERIC_CHARACTER";
   }
 
-  cout << digit << " is in [row][column]: " << row << " " << column << endl;
+  //cout << digit << " is in [row][column]: " << row << " " << column << endl;
 
   if ( digit < 0 || digit > 25 ){
     cerr << "INVALID_INDEX";
@@ -57,10 +57,10 @@ if (row != 13){
   cerr << "INCORRECT_NUMBER_OF_REFLECTOR_PARAMETERS";
 }
 
-cout << "MAPPING IS: " << endl;
+/*cout << "MAPPING IS: " << endl;
 for (int j = 0; j < 13; j++){
   cout << map[j][0] << " " << map[j][1] << endl;
-  }
+}*/
 
 int count = 0;
 for (int number = 0; number < 26; number++){ // iterates through all the numbers (0 - 25)
@@ -73,7 +73,6 @@ for (int number = 0; number < 26; number++){ // iterates through all the numbers
       count++;
     }
   }
-  cout << endl << "NUMBER: " << number << "WITH COUNT: " << count << endl;
   if (count > 1){ // if a number appears more than once in connections (i.e. more than 1)
     cerr << "2). INVALID_REFLECTOR_MAPPING";
   }
@@ -98,7 +97,7 @@ int i = 0;
 
 in_stream >> digit;
 
-cout << "I VALUE : " << i << endl;
+//cout << "I VALUE : " << i << endl;
 
 while(!in_stream.eof())
 {
@@ -111,7 +110,7 @@ while(!in_stream.eof())
     cerr << "INVALID_INDEX";
   }
 
-  cout << digit << " is in [row][column]: " << row << " " << column << endl;
+  //cout << digit << " is in [row][column]: " << row << " " << column << endl;
   plugboard[row][column] = digit;
   i++;
 
@@ -128,17 +127,17 @@ while(!in_stream.eof())
   }
   in_stream >> digit;
 
-  cout << "LOOP I VALUE: " << i << endl;
+  //cout << "LOOP I VALUE: " << i << endl;
 }
 
 in_stream.close();
 
-cout << "I VALUE IS : " << i << endl << endl;
+//cout << "I VALUE IS : " << i << endl << endl;
 
 if (i % 2 != 0){ // checking if number of inputted digits is even
   cerr << "INCORRECT_NUMBER_OF_PLUGBOARD_PARAMETERS";
 }
-cout << "ROW " << row;
+//cout << "ROW " << row;
 int count = 0;
 for (int number = 0; number < 26; number++){ // iterates through all the numbers (0 - 25)
   for (int j = 0; j < row; j++){ // iterates through every row
@@ -149,7 +148,7 @@ for (int number = 0; number < 26; number++){ // iterates through all the numbers
       count++;
     }
   }
-  cout << endl << "NUMBER: " << number << "WITH COUNT: " << count << endl;
+  //cout << endl << "NUMBER: " << number << "WITH COUNT: " << count << endl;
   if (count > 1){ // if a number appears more than once in connections (i.e. more than 1)
     cerr << "2). IMPOSSIBLE_PLUGBOARD_CONFIGURATION";
   }
@@ -217,8 +216,8 @@ for (int number = 0; number < 26; number ++){ // checks each number
   }
   if (count > 1){
     cerr << "INVALID_ROTOR_MAPPING";
-    cout << "number: " << number << " ";
-    cout << "count " << count << " ";
+    //cout << "number: " << number << " ";
+    //cout << "count " << count << " ";
   }
   count = 0;
 }
@@ -374,7 +373,7 @@ void load_positions(int starting_positions[], char** argv, int argc){
   //rotates current rotor regardless of whether there's then a notch or not
   int starting_pos = rotors_array[rotor_n].starting_pos;
 
-  cout << "Rotor " << rotor_n << " has starting position: " << starting_pos << endl << endl;
+  //cout << "Rotor " << rotor_n << " has starting position: " << starting_pos << endl << endl;
 
   if (starting_pos == 25){
     rotors_array[rotor_n].starting_pos = 0;
@@ -384,12 +383,12 @@ void load_positions(int starting_positions[], char** argv, int argc){
   rotors_array[rotor_n].starting_pos ++;
   }
 
-  cout << "starting position updated to: " << rotors_array[rotor_n].starting_pos << endl << endl;
+  //cout << "starting position updated to: " << rotors_array[rotor_n].starting_pos << endl << endl;
 
   // checks if new starting position is a notch; if so updates the next rotors starting position by 1
   for (int i = 0; i < 26; i++){
     if (rotors_array[rotor_n].starting_pos == rotors_array[rotor_n].notches[i]){
-      cout << rotors_array[rotor_n].starting_pos << " is a notch so next rotate next rotor..." << endl << endl;
+      //cout << rotors_array[rotor_n].starting_pos << " is a notch so next rotate next rotor..." << endl << endl;
 
       // iterates through the remaining rotors
       if (rotor_n-1 >= 0){
@@ -400,11 +399,11 @@ void load_positions(int starting_positions[], char** argv, int argc){
   }
 
 int reflector_mapping(int map[26][2], int digit){
-  cout << endl << "The inputted digit is: " << digit << endl;
+//  cout << endl << "The inputted digit is: " << digit << endl;
   for(int i=0; i < 26; i++){
     if (map[i][0] == digit){
-      cout << "The digit is mapped to: "
-           << map[i][1] << endl << endl;
+      //cout << "The digit is mapped to: "
+          // << map[i][1] << endl << endl;
       return map[i][1];
     }
   }
@@ -447,7 +446,7 @@ for (int rotor_n = 0; rotor_n < number_rotors; rotor_n++){
 }
 
 for (int rotor_n = 0; rotor_n < number_rotors; rotor_n++){
-  cout << endl << endl << "The outputted digit of rotor " << rotor_n << " is: "<< digit;
+  //cout << endl << endl << "The outputted digit of rotor " << rotor_n << " is: "<< digit;
   digit = rotors_array[rotor_n].mapping(rotors_array[rotor_n].starting_pos, rotors_array[rotor_n].map, digit);
 }
 
@@ -473,7 +472,7 @@ char encrypt(char inputted_letter, int argc, char** argv){
 
   // Convert to corresponding digit
   int digit = letter_to_digit(inputted_letter);
-  cout << endl << endl << "Which corresponds to number: " << digit << endl << endl;
+  //cout << endl << endl << "Which corresponds to number: " << digit << endl << endl;
 
 // Run through the load_plugboard
 class plugboard plugboard;
@@ -483,7 +482,7 @@ digit = check_connections(digit, plugboard.connections);
 
 // Run through rotors (in descending order to the first one)
 
-cout << endl << endl << "first rotor: " << endl<< "starting pos*: " << rotors_array[0].starting_pos << endl << endl;
+//cout << endl << endl << "first rotor: " << endl<< "starting pos*: " << rotors_array[0].starting_pos << endl << endl;
 
 for (int n = number_rotors-1; n >= 0 ; n--){
   digit = rotors_array[n].mapping(rotors_array[n].starting_pos, rotors_array[n].map, digit);
@@ -496,10 +495,10 @@ class reflector reflector; // Q: do you have to put class here because plugboard
 load_reflector(reflector.map, argv[2]);
 digit = check_connections(digit, reflector.map);
 
-cout << endl << endl;
+/*cout << endl << endl;
 for (int n = 0; n < 13; n ++){
   cout << reflector.map[n][0] << " " << reflector.map[n][1] << endl;
-}
+}*/
 
 // Run back through the rotors
 
@@ -521,20 +520,20 @@ return outputted_letter;
 // Member function definitions:
 
 int check_connections(int inputted_letter, int connections[13][2]){
-  cout << endl << "The inputted letter is: " << inputted_letter << endl;
+  //cout << endl << "The inputted letter is: " << inputted_letter << endl;
   for(int i=0; i <= 12; i++){
     if (connections[i][0] == inputted_letter){
-      cout << "There is a connection in the first column; connected to: "
-           << connections[i][1] << endl << endl;
+    //  cout << "There is a connection in the first column; connected to: "
+        //   << connections[i][1] << endl << endl;
       return connections[i][1];
     }
     if (connections[i][1] == inputted_letter){
-      cout << "There is a connection in the second column; connected to: "
-           << connections[i][0] << endl << endl;
+    //  cout << "There is a connection in the second column; connected to: "
+        //   << connections[i][0] << endl << endl;
       return connections[i][0];
     }
   }
-  cout << "There is not a connection";
+//  cout << "There is not a connection";
   return inputted_letter;
 }
 
@@ -543,9 +542,9 @@ int rotor::mapping(int starting_pos, int map[26][2], int inputted_digit){
   int rotation_transformation_1;
   int rotation_transformation_2;
   int mapped_digit;
-  cout << endl << "Starting position (digit at 12 o'clock): " << starting_pos<<endl;
+  //cout << endl << "Starting position (digit at 12 o'clock): " << starting_pos<<endl;
 
-  cout << "Inputted (absolute) digit is: " << inputted_digit << endl;
+  //cout << "Inputted (absolute) digit is: " << inputted_digit << endl;
   // factoring in rotation to the inputted_digit
   // transforming inputted digit (absolute form) to corresponding relative form
   rotation_transformation_1 = inputted_digit + starting_pos; //takes into account rotation
@@ -553,11 +552,11 @@ int rotor::mapping(int starting_pos, int map[26][2], int inputted_digit){
   if (rotation_transformation_1 >= 26){
     rotation_transformation_1 = rotation_transformation_1 - 26;
   }
-  cout << "Relative version is: " << rotation_transformation_1<<endl;
+//  cout << "Relative version is: " << rotation_transformation_1<<endl;
 
   // mapping the relative digit
   mapped_digit = map[rotation_transformation_1][1]; // This mapping doesnt compensate for THE RETURN JOURNEY (ONCE DONE - COMPLETE!)
-  cout << "Which has been mapped to: " << mapped_digit << endl;
+//  cout << "Which has been mapped to: " << mapped_digit << endl;
 
   // removing affects of rotation
   // transforming relative form to corresponding absolute form
@@ -567,6 +566,6 @@ int rotor::mapping(int starting_pos, int map[26][2], int inputted_digit){
     rotation_transformation_2 = rotation_transformation_2 + 26;
   }
 
-  cout << "Absolute version of this is: " << rotation_transformation_2 << endl << endl;
+//  cout << "Absolute version of this is: " << rotation_transformation_2 << endl << endl;
   return rotation_transformation_2;
 }

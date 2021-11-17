@@ -29,26 +29,26 @@ return 0;
 
 string input_string(string string){
   cin >> string;
-  cout << "the string is " << string << "   ";
+  //cout << "the string is " << string << "   ";
   return string;
 }
 
 string encrypt_string(string str, int argc, char** argv){
-  cout << "the string in encrypt_string is " << str << "   ";
+//  cout << "the string in encrypt_string is " << str << "   ";
 
   int string_length = str.size();
 
-  cout << endl << endl << "The string length is: " << string_length << endl << endl;
+  //cout << endl << endl << "The string length is: " << string_length << endl << endl;
 
   for (int letter_n = 0; letter_n < string_length; letter_n++){
 
     char inputted_letter = str[letter_n];
-    cout << "inputted letter" << inputted_letter;
+    //cout << "inputted letter" << inputted_letter;
     char outputted_letter;
     int ascii;
 
     ascii = inputted_letter;
-    cout << "ascii number " << ascii << endl << endl;
+    //cout << "ascii number " << ascii << endl << endl;
 
     /*if (ascii == 9 || ascii == 13 || ascii == 32){
     }*/
