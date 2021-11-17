@@ -4,6 +4,42 @@
 
 using namespace std;
 
+// Rotor class member functions:
+
+void rotor::load_positions(int starting_positions[], char** argv, int argc){
+  ifstream in_stream;
+  int digit;
+  int number_rotors = (argc - 4);
+
+  // int number_rotors = (argc - 4); // - executable, plugboard, reflector & rotors' positions
+
+  in_stream.open(argv[argc-1]); // opens final argument
+
+  if (in_stream.fail()){
+    cout << "File could not be opened :(";
+  }
+
+  int count = 0;
+
+  in_stream >> digit;
+
+  while(!in_stream.eof())
+  {
+    starting_positions[count] = digit;
+    count++;
+
+    in_stream >> digit;
+  }
+
+
+
+  if (count < number_rotors){ // I.e. if the number of positions is less than the number of rotors
+    cerr << "NO_ROTOR_STARTING_POSITION";
+  }
+
+  in_stream.close();
+  }
+
 void reflector::load_reflector(int map[13][2], char* argv_component){ //argv[2]
 
 ifstream in_stream;
@@ -259,40 +295,6 @@ void rotor::load_notches(int notches[26], char* argv_component){
   }
 
 
-void rotor::load_positions(int starting_positions[], char** argv, int argc){
-  ifstream in_stream;
-  int digit;
-  int number_rotors = (argc - 4);
-
-  // int number_rotors = (argc - 4); // - executable, plugboard, reflector & rotors' positions
-
-  in_stream.open(argv[argc-1]); // opens final argument
-
-  if (in_stream.fail()){
-    cout << "File could not be opened :(";
-  }
-
-  int count = 0;
-
-  in_stream >> digit;
-
-  while(!in_stream.eof())
-  {
-    starting_positions[count] = digit;
-    count++;
-
-    in_stream >> digit;
-  }
-
-
-
-  if (count < number_rotors){ // I.e. if the number of positions is less than the number of rotors
-    cerr << "NO_ROTOR_STARTING_POSITION";
-  }
-
-  in_stream.close();
-  }
-
   void rotor::load_rotors_array(rotor rotor_array[],int argc, char** argv){
 
   int number_rotors = (argc - 4);
@@ -398,13 +400,13 @@ void rotor::load_positions(int starting_positions[], char** argv, int argc){
   }
   }
 
-int letter_to_digit(char letter){
+int enigma::letter_to_digit(char letter){
   int digit;
   digit = letter - 'A';
   return digit;
 }
 
-char digit_to_letter(int digit){
+char enigma::digit_to_letter(int digit){
   char letter;
   letter = digit + 'A';
   return letter;
@@ -448,21 +450,122 @@ for (int i = 0; i < 26 ; i++){
 }*/
 }
 
-char encrypt(char inputted_letter, plugboard plugboard, reflector reflector, rotor rotors_array[], int argc, char** argv){
+
+string encrypt_string(string str, enigma enigma, int argc, char** argv){
+
+  int number_rotors = (argc - 4);
+
+  if (number_rotors <= 0){
+    number_rotors = 0;
+  }
+
+  class plugboard plugboard;
+  class reflector reflector; // Q: do you have to put class here because plugboard is also the name of a variable?
+
+  plugboard.load_plugboard(plugboard.connections, argv[1]);
+  reflector.load_reflector(reflector.map, argv[2]);
+
+  int string_length = str.size();
+
+  //cout << endl << endl << "The string length is: " << string_length << endl << endl;
+
+  for (int letter_n = 0; letter_n < string_length; letter_n++){
+
+    char inputted_letter = str[letter_n];
+    //cout << "inputted letter" << inputted_letter;
+    char outputted_letter;
+    int ascii;
+
+    ascii = inputted_letter;
+
+    if (ascii < 9){
+      cerr << "INVALID_INPUT_CHARACTER";
+    }
+    if (ascii > 9 && ascii < 13){
+      cerr << "INVALID_INPUT_CHARACTER";
+    }
+
+    if (ascii > 13 && ascii < 32){
+      cerr << "INVALID_INPUT_CHARACTER";
+    }
+
+    if (ascii > 32 && ascii < 65){
+      cerr << "INVALID_INPUT_CHARACTER";
+    }
+
+    if (ascii > 90){
+      cerr << "INVALID_INPUT_CHARACTER";
+    }
+
+    if (ascii == 9 || ascii == 13 || ascii == 32){
+      str[letter_n] = ' ';
+    }
+
+    if (ascii != 9 && ascii != 13 && ascii != 32 && number_rotors > 0){ // Keep asking for input letter if input a letter (tab, return, space)
+
+      class rotor rotors_array[number_rotors];
+      rotors_array[0].load_rotors_array(rotors_array, argc, argv);
+
+      outputted_letter = enigma.encrypt(inputted_letter, enigma, plugboard, reflector, rotors_array, argc, argv);
+      str[letter_n] = outputted_letter;
+    }
+
+    if (ascii != 9 && ascii != 13 && ascii != 32 && number_rotors == 0){
+      outputted_letter = enigma.no_rotors_encrypt(inputted_letter, enigma, plugboard, reflector, argc, argv);
+      str[letter_n] = outputted_letter;
+    }
+  }
+  return str;
+}
+
+string input_string(string str){
+  getline(cin,str);
+  //cout << "the string is " << string << "   ";
+  return str;
+}
+
+char enigma::no_rotors_encrypt(char inputted_letter, enigma enigma, plugboard plugboard, reflector reflector, int argc, char** argv){
+
+  char outputted_letter;
+
+  // Convert to corresponding digit
+  int digit = enigma.letter_to_digit(inputted_letter);
+  //cout << endl << endl << "digit: " << digit << endl << endl
+
+  // Run through plugboard
+  digit = enigma.check_connections(digit, plugboard.connections);
+  //cout << "Digit after plugboard: " << digit << endl << endl;
+
+  // Run through relector
+  digit = enigma.check_connections(digit, reflector.map);
+  //cout << "Digit after reflector: " << digit << endl << endl;
+
+  // Run back through the plugboard
+  digit = enigma.check_connections(digit, plugboard.connections);
+  //cout << "Digit after returning through the plugboard: " << digit;
+
+  // Convert from integer into chracter
+  outputted_letter = enigma.digit_to_letter(digit);
+  //cout << endl << endl << "The encrypted version of inputted letter is: " << outputted_letter << endl << endl;
+
+  return outputted_letter;
+}
+
+char enigma::encrypt(char inputted_letter, enigma enigma, plugboard plugboard, reflector reflector, rotor rotors_array[], int argc, char** argv){
 
   char outputted_letter;
   int number_rotors = (argc - 4);
-  int ascii;
+  //int ascii;
 
   // Rotate rotor & check notches
   rotors_array[0].check_notches(rotors_array, number_rotors-1, argc);
 
   // Convert to corresponding digit
-  int digit = letter_to_digit(inputted_letter);
+  int digit = enigma.letter_to_digit(inputted_letter);
   //cout << endl << endl << "digit: " << digit << endl << endl;
 
 // Run through plugboard
-digit = check_connections(digit, plugboard.connections);
+digit = enigma.check_connections(digit, plugboard.connections);
 //cout << "Digit after plugboard: " << digit << endl << endl;
 
 // Run through rotors (in descending order to the first one)
@@ -473,7 +576,7 @@ for (int n = number_rotors-1; n >= 0 ; n--){
 }
 
 // Run through relector
-digit = check_connections(digit, reflector.map);
+digit = enigma.check_connections(digit, reflector.map);
 //cout << "Digit after reflector: " << digit << endl << endl;
 
 /*cout << endl << endl;
@@ -486,12 +589,12 @@ digit = rotors_array[0].inverse_mapping(rotors_array, argc, digit);
 //cout << "Digit after inverse mapping: " << digit;
 
 // Run back through the plugboard
-digit = check_connections(digit, plugboard.connections);
+digit = enigma.check_connections(digit, plugboard.connections);
 //cout << "Digit after returning through the plugboard: " << digit;
 
 
 // Convert from integer into chracter
-outputted_letter = digit_to_letter(digit);
+outputted_letter = enigma.digit_to_letter(digit);
 //cout << endl << endl << "The encrypted version of inputted letter is: " << outputted_letter << endl << endl;
 
 return outputted_letter;
@@ -501,7 +604,7 @@ return outputted_letter;
 
 // Member function definitions:
 
-int check_connections(int inputted_letter, int connections[13][2]){
+int enigma::check_connections(int inputted_letter, int connections[13][2]){
   //cout << endl << "The inputted letter is: " << inputted_letter << endl;
   for(int i=0; i <= 12; i++){
     if (connections[i][0] == inputted_letter){

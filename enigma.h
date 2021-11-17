@@ -49,19 +49,16 @@ class reflector{
 class enigma{
   public:
 
-    plugboard plugboard;
+    /*plugboard plugboard;
     reflector reflector;
-    rotor rotors_array[];
+    rotor rotors_array[];*/
 
+    char encrypt(char inputted_letter, enigma enigma, plugboard plugboard, reflector reflector, rotor rotors_array[], int argc, char** argv);
+    char no_rotors_encrypt(char inputted_letter, enigma enigma, plugboard plugboard, reflector reflector, int argc, char** argv);
+    int check_connections(int inputted_letter, int connections[13][2]);
+    int letter_to_digit(char letter);
+    char digit_to_letter(int digit);
 };
-
-// functions:
-
-int check_connections(int inputted_letter, int connections[13][2]);
-int letter_to_digit(char letter);
-
-char encrypt(char inputted_letter, plugboard plugboard, reflector reflector, rotor rotors_array[], int argc, char** argv);
-char digit_to_letter(int digit);
 
 
 #endif
