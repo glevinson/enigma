@@ -11,6 +11,7 @@ class rotor{
       int starting_pos; //that just needs to be a integer, as tells you which letter at 12 o'clock
       int notches[26]; //make dynamic
       int map[26][2];
+      int inverse_map [26][2];
 
       // member function declarations
       int mapping(int starting_pos, int map[26][2], int letter_dig); //does letter_dig also have to be a data memeber?
@@ -59,7 +60,7 @@ int reflector_mapping(int map[26][2], int digit);
 
 int inverse_mapping(rotor rotors_array[], int argc, int digit);
 
-char encrypt(char inputted_letter, int argc, char** argv);
+char encrypt(char inputted_letter, plugboard plugboard, reflector reflector, rotor rotors_array[], int argc, char** argv);
 
 char digit_to_letter(int digit);
 

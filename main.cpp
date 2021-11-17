@@ -36,6 +36,16 @@ string input_string(string string){
 string encrypt_string(string str, int argc, char** argv){
 //  cout << "the string in encrypt_string is " << str << "   ";
 
+int number_rotors = (argc - 4);
+
+class plugboard plugboard;
+class reflector reflector; // Q: do you have to put class here because plugboard is also the name of a variable?
+class rotor rotors_array[number_rotors];
+
+load_plugboard(plugboard.connections, argv[1]);
+load_rotors_array(rotors_array, argc, argv);
+load_reflector(reflector.map, argv[2]);
+
   int string_length = str.size();
 
   //cout << endl << endl << "The string length is: " << string_length << endl << endl;
@@ -77,7 +87,7 @@ string encrypt_string(string str, int argc, char** argv){
     }
 
     if (ascii != 9 && ascii != 13 && ascii != 32){ // Keep asking for input letter if input a letter (tab, return, space)
-      outputted_letter = encrypt(inputted_letter, argc, argv);
+      outputted_letter = encrypt(inputted_letter, plugboard, reflector, rotors_array, argc, argv);
       str[letter_n] = outputted_letter;
     }
   }

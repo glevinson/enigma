@@ -307,10 +307,10 @@ void load_positions(int starting_positions[], char** argv, int argc){
   }
 
   // Example arguments tests:
-  /*
+
   // Rotor 1 map & notches
 
-  cout << endl << "Rotor 1 map: " << endl << endl;
+  /*cout << endl << "Rotor 1 map: " << endl << endl;
   for (int i= 0; i < 26; i++){
     for (int j = 0; j < 2; j++){
       cout << rotor_array[0].map[i][j] << " ";
@@ -323,14 +323,14 @@ void load_positions(int starting_positions[], char** argv, int argc){
   for(int i = 0; i < 26; i++){
     cout << rotor_array[0].notches[i] << " ";
   }
-  cout << endl;
+  cout << endl; */
 
   cout << endl << "Rotor 1 starting position: ";
   cout << rotor_array[0].starting_pos << endl << endl;
 
   // Rotor 2 map & notches
 
-  cout << endl << "Rotor 2 map: " << endl << endl;
+  /*cout << endl << "Rotor 2 map: " << endl << endl;
   for (int i= 0; i < 26; i++){
     for (int j = 0; j < 2; j++){
       cout << rotor_array[1].map[i][j] << " ";
@@ -342,14 +342,14 @@ void load_positions(int starting_positions[], char** argv, int argc){
   for(int i = 0; i < 26; i++){
     cout << rotor_array[1].notches[i] << " ";
   }
-  cout << endl;
+  cout << endl;*/
 
   cout << endl << "Rotor 2 starting position: ";
   cout << rotor_array[1].starting_pos << endl << endl;
 
   // Rotor 3 map & notches
 
-  cout << endl << "Rotor 3 map: " << endl << endl;
+  /*cout << endl << "Rotor 3 map: " << endl << endl;
   for (int i= 0; i < 26; i++){
     for (int j = 0; j < 2; j++){
       cout << rotor_array[2].map[i][j] << " ";
@@ -361,11 +361,11 @@ void load_positions(int starting_positions[], char** argv, int argc){
   for(int i = 0; i < 26; i++){
     cout << rotor_array[2].notches[i] << " ";
   }
-  cout << endl;
+  cout << endl;*/
 
   cout << endl << "Rotor 3 starting position: ";
   cout << rotor_array[2].starting_pos << endl << endl;
-  */
+
   }
 
   void check_notches(rotor rotors_array[], int rotor_n, int argc){ // will put in rotor_n = 0 // ROTATE THE THIRD ONE TO THE LEFT MOST
@@ -373,7 +373,7 @@ void load_positions(int starting_positions[], char** argv, int argc){
   //rotates current rotor regardless of whether there's then a notch or not
   int starting_pos = rotors_array[rotor_n].starting_pos;
 
-  //cout << "Rotor " << rotor_n << " has starting position: " << starting_pos << endl << endl;
+  cout << "Rotor " << rotor_n << " has starting position: " << starting_pos << endl << endl;
 
   if (starting_pos == 25){
     rotors_array[rotor_n].starting_pos = 0;
@@ -383,12 +383,12 @@ void load_positions(int starting_positions[], char** argv, int argc){
   rotors_array[rotor_n].starting_pos ++;
   }
 
-  //cout << "starting position updated to: " << rotors_array[rotor_n].starting_pos << endl << endl;
+  cout << "starting position updated to: " << rotors_array[rotor_n].starting_pos << endl << endl;
 
   // checks if new starting position is a notch; if so updates the next rotors starting position by 1
   for (int i = 0; i < 26; i++){
     if (rotors_array[rotor_n].starting_pos == rotors_array[rotor_n].notches[i]){
-      //cout << rotors_array[rotor_n].starting_pos << " is a notch so next rotate next rotor..." << endl << endl;
+      cout << rotors_array[rotor_n].starting_pos << " is a notch so next rotate next rotor..." << endl << endl;
 
       // iterates through the remaining rotors
       if (rotor_n-1 >= 0){
@@ -440,14 +440,14 @@ for (int rotor_n = 0; rotor_n < number_rotors; rotor_n++){
     }
   }
   for (int i = 0; i < 26; i++){
-    rotors_array[rotor_n].map[i][0] = i;
-    rotors_array[rotor_n].map[i][1] = unordered_map[i];
+    rotors_array[rotor_n].inverse_map[i][0] = i;
+    rotors_array[rotor_n].inverse_map[i][1] = unordered_map[i];
   }
 }
 
 for (int rotor_n = 0; rotor_n < number_rotors; rotor_n++){
   //cout << endl << endl << "The outputted digit of rotor " << rotor_n << " is: "<< digit;
-  digit = rotors_array[rotor_n].mapping(rotors_array[rotor_n].starting_pos, rotors_array[rotor_n].map, digit);
+  digit = rotors_array[rotor_n].mapping(rotors_array[rotor_n].starting_pos, rotors_array[rotor_n].inverse_map, digit);
 }
 
 return digit;
@@ -459,41 +459,42 @@ for (int i = 0; i < 26 ; i++){
 }*/
 }
 
-char encrypt(char inputted_letter, int argc, char** argv){
+char encrypt(char inputted_letter, plugboard plugboard, reflector reflector, rotor rotors_array[], int argc, char** argv){
 
   char outputted_letter;
   int number_rotors = (argc - 4);
-  rotor rotors_array[number_rotors];
   int ascii;
 
-  // Rotate rotor & check notches
+/*
+  class plugboard plugboard;
+  class reflector reflector; // Q: do you have to put class here because plugboard is also the name of a variable?
+  class rotor rotors_array[number_rotors];
+
+  load_plugboard(plugboard.connections, argv[1]);
   load_rotors_array(rotors_array, argc, argv);
+  load_reflector(reflector.map, argv[2]);*/
+
+  // Rotate rotor & check notches
   check_notches(rotors_array, number_rotors-1, argc);
 
   // Convert to corresponding digit
   int digit = letter_to_digit(inputted_letter);
-  //cout << endl << endl << "Which corresponds to number: " << digit << endl << endl;
+  cout << endl << endl << "digit: " << digit << endl << endl;
 
-// Run through the load_plugboard
-class plugboard plugboard;
-
-load_plugboard(plugboard.connections, argv[1]);
+// Run through plugboard
 digit = check_connections(digit, plugboard.connections);
+cout << "Digit after plugboard: " << digit << endl << endl;
 
 // Run through rotors (in descending order to the first one)
-
 //cout << endl << endl << "first rotor: " << endl<< "starting pos*: " << rotors_array[0].starting_pos << endl << endl;
-
 for (int n = number_rotors-1; n >= 0 ; n--){
   digit = rotors_array[n].mapping(rotors_array[n].starting_pos, rotors_array[n].map, digit);
+  cout << "Digit after rotor " << (n+1) << " is: " << digit << endl<< endl;
 }
 
 // Run through relector
-
-class reflector reflector; // Q: do you have to put class here because plugboard is also the name of a variable?
-
-load_reflector(reflector.map, argv[2]);
 digit = check_connections(digit, reflector.map);
+cout << "Digit after reflector: " << digit << endl << endl;
 
 /*cout << endl << endl;
 for (int n = 0; n < 13; n ++){
@@ -501,11 +502,12 @@ for (int n = 0; n < 13; n ++){
 }*/
 
 // Run back through the rotors
-
 digit = inverse_mapping(rotors_array, argc, digit);
+cout << "Digit after inverse mapping: " << digit;
 
 // Run back through the plugboard
 digit = check_connections(digit, plugboard.connections);
+cout << "Digit after returning through the plugboard: " << digit;
 
 
 // Convert from integer into chracter
@@ -542,9 +544,9 @@ int rotor::mapping(int starting_pos, int map[26][2], int inputted_digit){
   int rotation_transformation_1;
   int rotation_transformation_2;
   int mapped_digit;
-  //cout << endl << "Starting position (digit at 12 o'clock): " << starting_pos<<endl;
+  cout << endl << "Starting position (digit at 12 o'clock): " << starting_pos<<endl;
 
-  //cout << "Inputted (absolute) digit is: " << inputted_digit << endl;
+  cout << "Inputted (absolute) digit is: " << inputted_digit << endl;
   // factoring in rotation to the inputted_digit
   // transforming inputted digit (absolute form) to corresponding relative form
   rotation_transformation_1 = inputted_digit + starting_pos; //takes into account rotation
@@ -552,11 +554,11 @@ int rotor::mapping(int starting_pos, int map[26][2], int inputted_digit){
   if (rotation_transformation_1 >= 26){
     rotation_transformation_1 = rotation_transformation_1 - 26;
   }
-//  cout << "Relative version is: " << rotation_transformation_1<<endl;
+  cout << "Relative version is: " << rotation_transformation_1<<endl;
 
   // mapping the relative digit
   mapped_digit = map[rotation_transformation_1][1]; // This mapping doesnt compensate for THE RETURN JOURNEY (ONCE DONE - COMPLETE!)
-//  cout << "Which has been mapped to: " << mapped_digit << endl;
+  cout << "Which has been mapped to: " << mapped_digit << endl;
 
   // removing affects of rotation
   // transforming relative form to corresponding absolute form
@@ -566,6 +568,6 @@ int rotor::mapping(int starting_pos, int map[26][2], int inputted_digit){
     rotation_transformation_2 = rotation_transformation_2 + 26;
   }
 
-//  cout << "Absolute version of this is: " << rotation_transformation_2 << endl << endl;
+  cout << "Absolute version of this is: " << rotation_transformation_2 << endl << endl;
   return rotation_transformation_2;
 }
