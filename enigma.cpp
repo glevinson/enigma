@@ -40,7 +40,7 @@ void rotor::load_positions(int starting_positions[], char** argv, int argc){
   }
 
   if (count != number_rotors){ // I.e. if the number of positions is less than the number of rotors
-    cerr << "NO_ROTOR_STARTING_POSITION";
+    cerr << "Incorrect (odd) number of parameters in reflector file reflector.rf";
     throw 8;
   }
 
@@ -69,7 +69,7 @@ while(!in_stream.eof())
 {
 
   if (in_stream.fail()){ //CHECKING FOR NON_NUMERIC CHARACTER
-    cerr << "NON_NUMERIC_CHARACTER 2";
+    cerr << "Non-numeric character in reflector file reflector.rf";
     throw 4;
   }
 
@@ -101,7 +101,7 @@ while(!in_stream.eof())
 in_stream.close();
 
 if (count != 26){ // tells us if theres too litle parameters
-  cerr << "INCORRECT_NUMBER_OF_REFLECTOR_PARAMETERS";
+  cerr << "Insufficient number of mappings in reflector file: reflector.rf";
   throw 10;
 }
 
@@ -154,7 +154,7 @@ while(!in_stream.eof())
 {
 
   if (in_stream.fail()){ //CHECKING FOR NON_NUMERIC CHARACTER
-    cerr << "NON_NUMERIC_CHARACTER 3";
+    cerr << "Non-numeric character in plugboard file plugboard.pb";
     throw 4;
   }
 
@@ -188,7 +188,7 @@ in_stream.close();
 //cout << "I VALUE IS : " << i << endl << endl;
 
 if (i % 2 != 0){ // checking if number of inputted digits is even
-  cerr << "INCORRECT_NUMBER_OF_PLUGBOARD_PARAMETERS";
+  cerr << "Incorrect number of parameters in plugboard file plugboard.pb";
   throw 6;
 }
 //cout << "ROW " << row;
@@ -485,7 +485,7 @@ void encrypt_string(string str, enigma enigma, int argc, char** argv){
   int string_length = str.size();
 
   if (argc < 3){
-    cerr << "INSUFFICIENT_NUMBER_OF_PARAMETERS";
+    cerr << "usage: enigma plugboard-file reflector-file (<rotor-file>)* rotor-position";
     throw 1;
   }
 
