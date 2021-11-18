@@ -39,8 +39,8 @@ void rotor::load_positions(int starting_positions[], char** argv, int argc){
 
   }
 
-  if (count != number_rotors){ // I.e. if the number of positions is less than the number of rotors
-    cerr << "Incorrect (odd) number of parameters in reflector file reflector.rf";
+  if (number_rotors != 0 && count != number_rotors){ // I.e. if the number of positions is less than the number of rotors
+    cerr << "NO_ROTOR_STARTING_POSITION";
     throw 8;
   }
 
@@ -484,16 +484,12 @@ void encrypt_string(string str, enigma enigma, int argc, char** argv){
   int ascii;
   int string_length = str.size();
 
-  if (argc < 3){
+  if (argc < 4){
     cerr << "usage: enigma plugboard-file reflector-file (<rotor-file>)* rotor-position";
     throw 1;
   }
 
   //cout << endl << endl << "The string length is: " << string_length << endl << endl;
-
-  if (number_rotors <= 0){
-    number_rotors = 0;
-  }
 
   class plugboard plugboard;
   class reflector reflector; // Q: do you have to put class here because plugboard is also the name of a variable?
