@@ -26,13 +26,18 @@ void rotor::load_positions(int starting_positions[], char** argv, int argc){
 
   while(!in_stream.eof())
   {
+
+    if (in_stream.fail()){
+      cerr << "NON_NUMERIC_CHARACTER 1";
+      throw 4;
+    }
+
     starting_positions[count] = digit;
     count++;
 
     in_stream >> digit;
+
   }
-
-
 
   if (count != number_rotors){ // I.e. if the number of positions is less than the number of rotors
     cerr << "NO_ROTOR_STARTING_POSITION";
@@ -45,7 +50,7 @@ void rotor::load_positions(int starting_positions[], char** argv, int argc){
 void reflector::load_reflector(int map[13][2], char* argv_component){ //argv[2]
 
 ifstream in_stream;
-int digit;
+int digit, count, count_2;
 
 in_stream.open(argv_component);
 
@@ -56,6 +61,7 @@ if (in_stream.fail()){
 
 int row = 0;
 int column = 0;
+count = 0;
 
 in_stream >> digit;
 
@@ -63,7 +69,7 @@ while(!in_stream.eof())
 {
 
   if (in_stream.fail()){ //CHECKING FOR NON_NUMERIC CHARACTER
-    cerr << "NON_NUMERIC_CHARACTER";
+    cerr << "NON_NUMERIC_CHARACTER 2";
     throw 4;
   }
 
@@ -73,6 +79,8 @@ while(!in_stream.eof())
     cerr << "INVALID_INDEX";
     throw 3;
   }
+
+  count++;
 
   map[row][column] = digit;
 
@@ -88,13 +96,11 @@ while(!in_stream.eof())
     column --;
   }
   in_stream >> digit;
-
 }
 
 in_stream.close();
 
-
-if (row != 13){
+if (count != 26){ // tells us if theres too litle parameters
   cerr << "INCORRECT_NUMBER_OF_REFLECTOR_PARAMETERS";
   throw 10;
 }
@@ -104,7 +110,7 @@ for (int j = 0; j < 13; j++){
   cout << map[j][0] << " " << map[j][1] << endl;
 }*/
 
-int count = 0;
+count_2 = 0;
 for (int number = 0; number < 26; number++){ // iterates through all the numbers (0 - 25)
   for (int j = 0; j < 13; j++){ // iterates through every row
     if (map[j][0] == map[j][1]){ // if a digit maps to itself
@@ -113,14 +119,14 @@ for (int number = 0; number < 26; number++){ // iterates through all the numbers
 
     }
     if (map[j][0] == number || map[j][1] == number){ // If a number appears in a connection, count it
-      count++;
+      count_2++;
     }
   }
-  if (count > 1){ // if a number appears more than once in connections (i.e. more than 1)
+  if (count_2 > 1){ // if a number appears more than once in connections (i.e. more than 1)
     cerr << "INVALID_REFLECTOR_MAPPING";
     throw 9;
   }
-  count = 0;
+  count_2 = 0;
 }
 }
 
@@ -148,7 +154,7 @@ while(!in_stream.eof())
 {
 
   if (in_stream.fail()){ //CHECKING FOR NON_NUMERIC CHARACTER
-    cerr << "NON_NUMERIC_CHARACTER";
+    cerr << "NON_NUMERIC_CHARACTER 3";
     throw 4;
   }
 
@@ -239,7 +245,7 @@ void rotor::load_map(int map[26][2], char* argv_component){
   {
 
     if (in_stream.fail()){ //CHECKING FOR NON_NUMERIC CHARACTER
-      cerr << "NON_NUMERIC_CHARACTER";
+      cerr << "NON_NUMERIC_CHARACTER 4";
       throw 4;
     }
 
@@ -470,7 +476,7 @@ for (int i = 0; i < 26 ; i++){
 }
 
 
-string encrypt_string(string str, enigma enigma, int argc, char** argv){
+void encrypt_string(string str, enigma enigma, int argc, char** argv){
 
   int number_rotors = (argc - 4);
   char inputted_letter;
@@ -507,16 +513,11 @@ string encrypt_string(string str, enigma enigma, int argc, char** argv){
         throw 2;
       }
 
-      if (ascii == 9 || ascii == 13 || ascii == 32){
-        str[letter_n] = ' ';
-      }
-
       if (ascii != 9 && ascii != 13 && ascii != 32 && number_rotors == 0){
         outputted_letter = enigma.no_rotors_encrypt(inputted_letter, enigma, plugboard, reflector, argc, argv);
-        str[letter_n] = outputted_letter;
+        cout << outputted_letter;
       }
     }
-  return str;
 }
 
   class rotor rotors_array[number_rotors];
@@ -542,10 +543,9 @@ string encrypt_string(string str, enigma enigma, int argc, char** argv){
 
     if (ascii != 9 && ascii != 13 && ascii != 32 && number_rotors > 0){ // Keep asking for input letter if input a letter (tab, return, space)
       outputted_letter = enigma.encrypt(inputted_letter, enigma, plugboard, reflector, rotors_array, argc, argv);
-      str[letter_n] = outputted_letter;
+      cout << outputted_letter;
     }
   }
-  return str;
 }
 
 bool invalid_input_character(int ascii){

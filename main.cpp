@@ -8,7 +8,7 @@ using namespace std;
 
 string input_string(string str);
 
-string encrypt_string(string str, enigma enigma, int argc, char** argv);
+void encrypt_string(string str, enigma enigma, int argc, char** argv);
 
 // main Function
 
@@ -21,11 +21,12 @@ string = input_string(string);
 
 try
 {
-  cout << encrypt_string(string, enigma, argc, argv);
+  encrypt_string(string, enigma, argc, argv);
 }
 
 // catching any error codes
 catch (int error){
+  cout << endl << "error code is: " << error << endl;
   return error;
 }
 
