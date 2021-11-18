@@ -491,8 +491,8 @@ void encrypt_string(string str, enigma enigma, int argc, char** argv){
 
   //cout << endl << endl << "The string length is: " << string_length << endl << endl;
 
-  class plugboard plugboard;
-  class reflector reflector; // Q: do you have to put class here because plugboard is also the name of a variable?
+  //class plugboard plugboard;
+  //class reflector reflector; // Q: do you have to put class here because plugboard is also the name of a variable?
 
   plugboard.load_plugboard(plugboard.connections, argv[1]);
   reflector.load_reflector(reflector.map, argv[2]);

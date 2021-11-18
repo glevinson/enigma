@@ -48,10 +48,9 @@ class reflector{
 
 class enigma{
   public:
-
-    /*plugboard plugboard;
+    plugboard plugboard;
     reflector reflector;
-    rotor rotors_array[];*/
+    rotor rotors_array[];
 
     char encrypt(char inputted_letter, enigma enigma, plugboard plugboard, reflector reflector, rotor rotors_array[], int argc, char** argv);
     char no_rotors_encrypt(char inputted_letter, enigma enigma, plugboard plugboard, reflector reflector, int argc, char** argv);
