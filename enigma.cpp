@@ -1,12 +1,13 @@
 #include"enigma.h"
 #include<iostream>
 #include<fstream>
+#include<cstring>
 
 using namespace std;
 
 // Rotor class member functions:
 
-void rotor::load_positions(int starting_positions[], char** argv, int argc){
+void Rotor::load_positions(int starting_positions[], char** argv, int argc){
 
   ifstream in_stream;
   int digit;
@@ -51,7 +52,7 @@ void rotor::load_positions(int starting_positions[], char** argv, int argc){
   in_stream.close();
   }
 
-void reflector::load_reflector(int map[13][2], char* argv_component){
+void Reflector::load_reflector(int map[13][2], char* argv_component){
 
   ifstream in_stream;
   int digit, count, count_2;
@@ -141,7 +142,7 @@ void reflector::load_reflector(int map[13][2], char* argv_component){
 }
 }
 
-void plugboard::load_plugboard(int plugboard[13][2], char* argv_component){
+void Plugboard::load_plugboard(int plugboard[13][2], char* argv_component){
 
   ifstream in_stream;
   int digit, row, column;
@@ -230,14 +231,14 @@ void plugboard::load_plugboard(int plugboard[13][2], char* argv_component){
   }
 
   // Fill uninitalised array spaces with -1 so cannot accidentally be used
-  for (row; row < 13; row++){
+  for (; row < 13; row++){
     plugboard[row][0] = -1;
     plugboard[row][1] = -1;
   }
 }
 
 
-void rotor::load_map(int map[26][2], char* argv_component){
+void Rotor::load_map(int map[26][2], char* argv_component){
 
   // index map array's first column
   for (int i = 0; i < 26; i++){
@@ -303,7 +304,7 @@ void rotor::load_map(int map[26][2], char* argv_component){
   }
 }
 
-void rotor::load_notches(int notches[26], char* argv_component){
+void Rotor::load_notches(int notches[26], char* argv_component){
   ifstream in_stream;
   int row, ignore, notch;
 
@@ -337,13 +338,13 @@ void rotor::load_notches(int notches[26], char* argv_component){
     in_stream.close();
 
   // Fill uninitalised array spaces with -1 so cannot accidentally be used
-  for(row; row < 26; row++){
+  for(; row < 26; row++){
     notches[row] = -1;
   }
 }
 
 
-void rotor::load_rotors_array(rotor rotor_array[],int argc, char** argv){
+void Rotor::load_rotors_array(Rotor rotor_array[],int argc, char** argv){
 
   int number_rotors = (argc - 4);
   int starting_positions[number_rotors];
@@ -360,7 +361,7 @@ void rotor::load_rotors_array(rotor rotor_array[],int argc, char** argv){
   }
 }
 
-void rotor::check_notches(rotor rotors_array[], int rotor_n, int argc){
+void Rotor::check_notches(Rotor rotors_array[], int rotor_n, int argc){
 
   //rotates current rotor regardless of whether there's then a notch or not
   int starting_pos = rotors_array[rotor_n].starting_pos;
@@ -385,19 +386,19 @@ void rotor::check_notches(rotor rotors_array[], int rotor_n, int argc){
   }
 }
 
-int enigma::letter_to_digit(char letter){
+int Enigma::letter_to_digit(char letter){
   int digit;
   digit = letter - 'A';
   return digit;
 }
 
-char enigma::digit_to_letter(int digit){
+char Enigma::digit_to_letter(int digit){
   char letter;
   letter = digit + 'A';
   return letter;
 }
 
-int rotor::inverse_mapping(rotor rotors_array[], int argc, int digit){
+int Rotor::inverse_mapping(Rotor rotors_array[], int argc, int digit){
 
   int number_rotors = (argc - 4);
   int unordered_map[26];
@@ -428,14 +429,16 @@ int rotor::inverse_mapping(rotor rotors_array[], int argc, int digit){
   // iterate through rotors mappings
   // update digit using inverse maps in mapping function
   for (int rotor_n = 0; rotor_n < number_rotors; rotor_n++){
-  digit = rotors_array[rotor_n].mapping(rotors_array[rotor_n].starting_pos, rotors_array[rotor_n].inverse_map, digit);
+  digit = rotors_array[rotor_n].mapping(rotors_array[rotor_n].starting_pos,
+                                        rotors_array[rotor_n].inverse_map,
+                                        digit);
   }
 
   return digit;
 }
 
 
-void encrypt_string(string str, enigma enigma, int argc, char** argv){
+void encrypt_string(string str, Enigma enigma, int argc, char** argv){
 
   int number_rotors = (argc - 4);
   char inputted_letter, outputted_letter;
@@ -453,7 +456,7 @@ void encrypt_string(string str, enigma enigma, int argc, char** argv){
   enigma.reflector.load_reflector(enigma.reflector.map, argv[2]);
 
   // loading rotors array
-  class rotor rotors_array[number_rotors];
+  class Rotor rotors_array[number_rotors];
   rotors_array[0].load_rotors_array(rotors_array, argc, argv);
 
   // Iterate through each of the string's letters
@@ -470,19 +473,20 @@ void encrypt_string(string str, enigma enigma, int argc, char** argv){
 
     // encryption if have no rotors (for non whitespaces)
     if (ascii != 9 && ascii != 13 && ascii != 32 && number_rotors == 0){
-      outputted_letter = enigma.no_rotors_encrypt(inputted_letter, enigma, argc, argv);
+      outputted_letter = enigma.no_rotors_encrypt(inputted_letter, enigma);
       cout << outputted_letter;
     }
 
     // encryption if have rotors (for non whitespaces)
     if (ascii != 9 && ascii != 13 && ascii != 32 && number_rotors > 0){
-      outputted_letter = enigma.encrypt(inputted_letter, enigma, rotors_array, argc, argv);
+      outputted_letter = enigma.encrypt(inputted_letter, enigma, rotors_array,
+                                        argc);
       cout << outputted_letter;
     }
   }
 }
 
-bool enigma::invalid_input_character(int ascii){
+bool Enigma::invalid_input_character(int ascii){
   // ascii: 9, 13 & 32 all correspond to whitespaces
   // ascii: 65 - 90 correspond to A - Z
 
@@ -516,9 +520,9 @@ string input_string(){
 
 }
 
-int enigma::welcome(int argc, char** argv){
+int Enigma::welcome(int argc, char** argv){
 
-  enigma enigma;
+  Enigma enigma;
 
   // using try, throw & catch to return error codes
   try
@@ -532,7 +536,7 @@ int enigma::welcome(int argc, char** argv){
   return 0;
 }
 
-char enigma::no_rotors_encrypt(char inputted_letter, enigma enigma, int argc, char** argv){
+char Enigma::no_rotors_encrypt(char inputted_letter, Enigma enigma){
 
   char outputted_letter;
 
@@ -554,7 +558,8 @@ char enigma::no_rotors_encrypt(char inputted_letter, enigma enigma, int argc, ch
   return outputted_letter;
 }
 
-char enigma::encrypt(char inputted_letter, enigma enigma, rotor rotors_array[], int argc, char** argv){
+char Enigma::encrypt(char inputted_letter, Enigma enigma, Rotor rotors_array[],
+                     int argc){
 
   char outputted_letter;
   int number_rotors = (argc - 4);
@@ -570,7 +575,8 @@ char enigma::encrypt(char inputted_letter, enigma enigma, rotor rotors_array[], 
 
   // Run through rotors (in descending order to the first one)
   for (int n = number_rotors-1; n >= 0 ; n--){
-    digit = rotors_array[n].mapping(rotors_array[n].starting_pos, rotors_array[n].map, digit);
+    digit = rotors_array[n].mapping(rotors_array[n].starting_pos,
+                                    rotors_array[n].map, digit);
   }
 
   // Run through relector
@@ -589,7 +595,7 @@ char enigma::encrypt(char inputted_letter, enigma enigma, rotor rotors_array[], 
 
   }
 
-int enigma::check_connections(int digit, int connections[13][2]){
+int Enigma::check_connections(int digit, int connections[13][2]){
 
   // iterate through connections array rows
   // if number appears in a row, return its pair (same row, other collumn entry)
@@ -606,7 +612,7 @@ int enigma::check_connections(int digit, int connections[13][2]){
   return digit;
 }
 
-int rotor::mapping(int starting_pos, int map[26][2], int inputted_digit){
+int Rotor::mapping(int starting_pos, int map[26][2], int inputted_digit){
 
   // inputted digit corresponds to a absolute position
 

@@ -1,12 +1,11 @@
 #ifndef ENIGMA_H
 #define ENIGMA_H
 
-
 // classes:
 
-class rotor{
-  public:
+class Rotor{
 
+  public:
       // data members:
 
       // stores starting postiion of a rotor
@@ -26,19 +25,19 @@ class rotor{
       void load_notches(int notches[26], char* argv_component);
       // loads rotors map into an array
       void load_map(int map[26][2], char* argv_component);
-      // loads an array of rotors
-      void load_rotors_array(rotor rotor_array[], int argc, char** argv);
       // recursive function; checks notches & rotates rotors accordingly
-      void check_notches(rotor rotors_array[], int rotor_n, int argc);
+      void check_notches(Rotor rotors_array[], int rotor_n, int argc);
       // maps through rotors (outwards)
       int mapping(int starting_pos, int map[26][2], int letter_dig);
       // produces an inverse map and maps accordingly (return)
-      int inverse_mapping(rotor rotors_array[], int argc, int digit);
+      int inverse_mapping(Rotor rotors_array[], int argc, int digit);
+      // loads an array of rotors
+      void load_rotors_array(Rotor rotor_array[], int argc, char** argv);
 };
 
-class plugboard{
-  public:
+class Plugboard{
 
+  public:
     // data members:
 
     // plugboard connections
@@ -52,9 +51,9 @@ class plugboard{
     friend int check_connections(int digit, int connections[13][2]);
 };
 
-class reflector{
-  public:
+class Reflector{
 
+  public:
     //data members:
 
     // reflector map
@@ -69,21 +68,21 @@ class reflector{
 
 };
 
-class enigma{
+class Enigma{
 
   public:
-
     // data members:
 
-    plugboard plugboard;
-    reflector reflector;
+    Plugboard plugboard; // Plugboard (classes )or plugboard_t (structs)
+    Reflector reflector;
 
     // member functions:
 
     // encrypts a letter (if there are rotors)
-    char encrypt(char inputted_letter, enigma enigma, rotor rotors_array[], int argc, char** argv);
+    char encrypt(char inputted_letter, Enigma enigma, Rotor rotors_array[],
+                 int argc);
     // encrypts a letter (if there are not rotors)
-    char no_rotors_encrypt(char inputted_letter, enigma enigma, int argc, char** argv);
+    char no_rotors_encrypt(char inputted_letter, Enigma enigma);
     // Used for going through reflector & plugboard
     int check_connections(int inputted_letter, int connections[13][2]);
     // Converts inputted letter into corresponding digit between 0 & 25
@@ -95,9 +94,6 @@ class enigma{
     // Allows user to input string & calls encrypt_string on it
     int welcome(int argc, char** argv);
 };
-
-
-
 
 
 #endif
