@@ -6,7 +6,7 @@
 
 using namespace std;
 
-string input_string(string str);
+string input_string();
 
 void encrypt_string(string str, enigma enigma, int argc, char** argv);
 
@@ -15,19 +15,6 @@ void encrypt_string(string str, enigma enigma, int argc, char** argv);
 int main(int argc, char** argv){
 
 enigma enigma;
-string string;
 
-string = input_string(string);
-
-try
-{
-  encrypt_string(string, enigma, argc, argv);
-}
-
-// catching any error codes
-catch (int error){
-  return error;
-}
-
-return 0;
+return enigma.welcome(argc, argv);
 }
