@@ -7,7 +7,6 @@
 
 class Rotor{
 
-public:
       // data members:
 
       // stores starting postiion of a rotor
@@ -35,11 +34,12 @@ public:
       int inverse_mapping(Rotor rotors_array[], int argc, int digit);
       // loads an array of rotors
       void load_rotors_array(Rotor rotor_array[], int argc, char** argv);
+
+      friend class Enigma;
 };
 
 class Plugboard{
 
-public:
     // data members:
 
     // plugboard connections
@@ -51,11 +51,11 @@ public:
     void load_plugboard(int plugboard[13][2], char* argv_component);
     // checks plugboard connections & returns it if there is one
     friend int check_connections(int digit, int connections[13][2]);
+    friend class Enigma;
 };
 
 class Reflector{
 
-public:
     //data members:
 
     // reflector map
@@ -67,12 +67,11 @@ public:
     void load_reflector(int map[13][2], char* argv_component);
     // maps through reflector
     friend int check_connections(int inputted_letter, int connections[13][2]);
-
+    friend class Enigma;
 };
 
 class Enigma{
 
-public:
     // data members:
 
     Plugboard plugboard; // Plugboard (classes )or plugboard_t (structs)
@@ -97,6 +96,7 @@ public:
     std::string input_string();
     // Encrypts inputted string
     void encrypt_string(std::string str, Enigma enigma, int argc, char** argv);
+  public:
     // Allows user to input string & calls encrypt_string on it
     int welcome(Enigma enigma, int argc, char** argv);
 };
