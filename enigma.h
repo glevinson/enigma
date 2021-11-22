@@ -75,12 +75,12 @@ class Enigma{
 
     Plugboard plugboard; // Plugboard (classes )or plugboard_t (structs)
     Reflector reflector;
+    Rotor *rotors_array;
 
     // member functions:
 
     // encrypts a letter (if there are rotors)
-    char encrypt(char inputted_letter, Enigma enigma, Rotor rotors_array[],
-                 int argc);
+    char encrypt(char inputted_letter, Enigma enigma, int argc);
     // encrypts a letter (if there are not rotors)
     char no_rotors_encrypt(char inputted_letter, Enigma enigma);
     // Used for going through reflector & plugboard

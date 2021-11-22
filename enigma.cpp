@@ -451,13 +451,12 @@ void encrypt_string(string str, Enigma enigma, int argc, char** argv){
     throw 1;
   }
 
+  enigma.rotors_array = new Rotor[number_rotors];
+
   // Load the plugboard connections & reflector map
   enigma.plugboard.load_plugboard(enigma.plugboard.connections, argv[1]);
   enigma.reflector.load_reflector(enigma.reflector.map, argv[2]);
-
-  // loading rotors array
-  class Rotor rotors_array[number_rotors];
-  rotors_array[0].load_rotors_array(rotors_array, argc, argv);
+  enigma.rotors_array[0].load_rotors_array(enigma.rotors_array, argc, argv);
 
   // Iterate through each of the string's letters
   for (int letter_n = 0; letter_n < string_length; letter_n++){
@@ -479,8 +478,7 @@ void encrypt_string(string str, Enigma enigma, int argc, char** argv){
 
     // encryption if have rotors (for non whitespaces)
     if (ascii != 9 && ascii != 13 && ascii != 32 && number_rotors > 0){
-      outputted_letter = enigma.encrypt(inputted_letter, enigma, rotors_array,
-                                        argc);
+      outputted_letter = enigma.encrypt(inputted_letter, enigma, argc);
       cout << outputted_letter;
     }
   }
@@ -558,14 +556,13 @@ char Enigma::no_rotors_encrypt(char inputted_letter, Enigma enigma){
   return outputted_letter;
 }
 
-char Enigma::encrypt(char inputted_letter, Enigma enigma, Rotor rotors_array[],
-                     int argc){
+char Enigma::encrypt(char inputted_letter, Enigma enigma, int argc){
 
   char outputted_letter;
   int number_rotors = (argc - 4);
 
   // Rotate rotor & check notches
-  rotors_array[0].check_notches(rotors_array, number_rotors-1, argc);
+  rotors_array[0].check_notches(enigma.rotors_array, number_rotors-1, argc);
 
   // Convert to corresponding digit
   int digit = enigma.letter_to_digit(inputted_letter);
@@ -575,15 +572,16 @@ char Enigma::encrypt(char inputted_letter, Enigma enigma, Rotor rotors_array[],
 
   // Run through rotors (in descending order to the first one)
   for (int n = number_rotors-1; n >= 0 ; n--){
-    digit = rotors_array[n].mapping(rotors_array[n].starting_pos,
-                                    rotors_array[n].map, digit);
+    digit = enigma.rotors_array[n].mapping(enigma.rotors_array[n].starting_pos,
+                                           enigma.rotors_array[n].map, digit);
   }
 
   // Run through relector
   digit = enigma.check_connections(digit, enigma.reflector.map);
 
   // Run back through the rotors
-  digit = rotors_array[0].inverse_mapping(rotors_array, argc, digit);
+  digit = enigma.rotors_array[0].inverse_mapping(enigma.rotors_array, argc,
+                                                 digit);
 
   // Run back through the plugboard
   digit = enigma.check_connections(digit, enigma.plugboard.connections);
