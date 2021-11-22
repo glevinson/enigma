@@ -265,7 +265,7 @@ void Rotor::load_map(int map[26][2], char* argv_component){
 
     // non numeric character if instream fails after file opened
     if (in_stream.fail()){
-      cerr << "NON_NUMERIC_CHARACTER 4";
+      cerr << "NON_NUMERIC_CHARACTER";
       throw 4;
     }
 
