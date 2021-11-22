@@ -31,7 +31,7 @@ void Rotor::load_positions(int starting_positions[], char** argv, int argc){
   {
     // non numeric character if instream fails after file opened
     if (in_stream.fail()){
-      cerr << "NON_NUMERIC_CHARACTER 1";
+      cerr << "NON_NUMERIC_CHARACTER";
       throw 4;
     }
 
@@ -78,7 +78,7 @@ void Reflector::load_reflector(int map[13][2], char* argv_component){
 
     // non numeric character if instream fails after file opened
     if (in_stream.fail()){
-      cerr << "Non-numeric character in reflector file reflector.rf";
+      cerr << "NON_NUMERIC_CHARACTER";
       throw 4;
   }
 
@@ -112,7 +112,7 @@ void Reflector::load_reflector(int map[13][2], char* argv_component){
 
   // error if not exactly 26 digits in input stream
   if (count != 26){
-    cerr << "Insufficient number of mappings in reflector file: reflector.rf";
+    cerr << "INCORRECT_NUMBER_OF_REFLECTOR_PARAMETERS";
     throw 10;
   }
 
@@ -166,7 +166,7 @@ void Plugboard::load_plugboard(int plugboard[13][2], char* argv_component){
 
     // non numeric character if instream fails after file opened
     if (in_stream.fail()){
-      cerr << "Non-numeric character in plugboard file plugboard.pb";
+      cerr << "NON_NUMERIC_CHARACTER";
       throw 4;
     }
 
@@ -201,7 +201,7 @@ void Plugboard::load_plugboard(int plugboard[13][2], char* argv_component){
 
   // error if plugboard parameters not even
   if (i % 2 != 0){
-    cerr << "Incorrect number of parameters in plugboard file plugboard.pb";
+    cerr << "INCORRECT_NUMBER_OF_PLUGBOARD_PARAMETERS";
     throw 6;
   }
 
@@ -438,7 +438,7 @@ int Rotor::inverse_mapping(Rotor rotors_array[], int argc, int digit){
 }
 
 
-void encrypt_string(string str, Enigma enigma, int argc, char** argv){
+void Enigma::encrypt_string(string str, Enigma enigma, int argc, char** argv){
 
   int number_rotors = (argc - 4);
   char inputted_letter, outputted_letter;
@@ -447,7 +447,7 @@ void encrypt_string(string str, Enigma enigma, int argc, char** argv){
 
   // error unless there is at least plugboard, reflector & rotor positions
   if (argc < 4){
-    cerr << "usage: enigma plugboard-file reflector-file (<rotor-file>)* rotor-positions";
+    cerr << "INSUFFICIENT_NUMBER_OF_PARAMETERS";
     throw 1;
   }
 
@@ -510,7 +510,7 @@ bool Enigma::invalid_input_character(int ascii){
   return false;
 }
 
-string input_string(){
+string Enigma::input_string(){
 
   string str;
   getline(cin,str);
@@ -518,14 +518,12 @@ string input_string(){
 
 }
 
-int Enigma::welcome(int argc, char** argv){
-
-  Enigma enigma;
+int Enigma::welcome(Enigma enigma, int argc, char** argv){
 
   // using try, throw & catch to return error codes
   try
   {
-    encrypt_string(input_string(), enigma, argc, argv);
+    enigma.encrypt_string(enigma.input_string(), enigma, argc, argv);
   }
 
   catch (int error){

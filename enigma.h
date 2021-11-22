@@ -1,11 +1,13 @@
 #ifndef ENIGMA_H
 #define ENIGMA_H
 
+#include<string>
+
 // classes:
 
 class Rotor{
 
-  public:
+public:
       // data members:
 
       // stores starting postiion of a rotor
@@ -37,7 +39,7 @@ class Rotor{
 
 class Plugboard{
 
-  public:
+public:
     // data members:
 
     // plugboard connections
@@ -53,7 +55,7 @@ class Plugboard{
 
 class Reflector{
 
-  public:
+public:
     //data members:
 
     // reflector map
@@ -70,7 +72,7 @@ class Reflector{
 
 class Enigma{
 
-  public:
+public:
     // data members:
 
     Plugboard plugboard; // Plugboard (classes )or plugboard_t (structs)
@@ -91,8 +93,12 @@ class Enigma{
     char digit_to_letter(int digit);
     // Tests if inputted character acceptable
     bool invalid_input_character(int ascii);
+    // Prompts user to input a string
+    std::string input_string();
+    // Encrypts inputted string
+    void encrypt_string(std::string str, Enigma enigma, int argc, char** argv);
     // Allows user to input string & calls encrypt_string on it
-    int welcome(int argc, char** argv);
+    int welcome(Enigma enigma, int argc, char** argv);
 };
 
 
