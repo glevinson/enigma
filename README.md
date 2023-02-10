@@ -1,5 +1,5 @@
 # Enigma
-Imperial MSc Computing: C++ coursework for an Enigma machine
+Enigma Machine implementation in C++
 
 The Enigma machine can encrypt and decrypt messages that are written in the letters A-Z (all 26 uppercase alphabet). The message to be encoded can be written directly in the terminal or can be written in input.txt file. This project was the second C++ coursework as part of MSc Computing Science at Imperial College London.
 
